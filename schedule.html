@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>World Rowing — Programme</title>
+  <title>World Rowing — Schedule</title>
   <style>
     :root {
       --bg: #0f1117; --surface: #1a1d27; --surface2: #23273a;
@@ -16,23 +16,112 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
 
-    /* ── Header ── */
+    /* ── Header refondu (responsive) ── */
     header {
       background: var(--surface); border-bottom: 1px solid var(--border);
-      padding: 12px 24px; display: flex; align-items: center; gap: 12px;
-      position: sticky; top: 0; z-index: 100;
+      padding: 10px 20px; display: flex; align-items: center; gap: 12px;
+      position: sticky; top: 0; z-index: 100; min-height: 58px;
     }
-    header .logo { width: 32px; height: 32px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
-    header h1 { font-size: 1.05rem; font-weight: 600; }
-    header p  { font-size: 0.73rem; color: var(--text-muted); }
-    .header-nav { margin-left: auto; display: flex; gap: 8px; }
+    .brand {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; color: inherit; flex-shrink: 0;
+    }
+    .brand .logo {
+      width: 34px; height: 34px; background: var(--accent); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .brand-text h1 { font-size: 1.05rem; font-weight: 600; line-height: 1.2; }
+    .brand-text p  { font-size: 0.72rem; color: var(--text-muted); line-height: 1.2; margin-top: 2px; }
+
+    .header-nav { display: flex; gap: 4px; align-items: center; }
     .nav-link {
-      padding: 6px 12px; border-radius: var(--radius); font-size: 0.8rem; font-weight: 500;
-      border: 1px solid var(--border); color: var(--text-muted); cursor: pointer;
-      text-decoration: none; transition: border-color .15s, color .15s;
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 11px; border-radius: var(--radius);
+      font-size: 0.82rem; font-weight: 500;
+      border: 1px solid var(--border); color: var(--text-muted);
+      cursor: pointer; text-decoration: none;
+      transition: border-color .15s, color .15s, background .15s;
+      white-space: nowrap;
     }
     .nav-link:hover  { border-color: var(--accent); color: var(--accent); }
-    .nav-link.active { border-color: var(--accent); color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, var(--surface)); }
+    .nav-link.active {
+      border-color: var(--accent); color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+    }
+    .nav-icon  { font-size: 0.95rem; line-height: 1; }
+
+    .header-tools {
+      margin-left: auto;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .refresh-status {
+      font-size: 0.7rem; color: var(--text-muted);
+      padding: 0 4px; white-space: nowrap;
+      display: inline-flex; align-items: center; gap: 5px;
+    }
+    .refresh-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--text-muted); flex-shrink: 0;
+    }
+    .refresh-dot.on { background: var(--green); animation: pulse 2s infinite; }
+    @keyframes pulse {
+      0%,100% { opacity: 1; }
+      50%     { opacity: .35; }
+    }
+    .hdr-btn {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 6px 11px;
+      background: var(--surface2); border: 1px solid var(--border);
+      color: var(--text-muted); border-radius: var(--radius);
+      font-size: 0.8rem; font-weight: 600; cursor: pointer;
+      transition: border-color .15s, color .15s, background .15s;
+      white-space: nowrap; font-family: inherit; line-height: 1;
+    }
+    .hdr-btn:hover { border-color: var(--accent); color: var(--text); }
+    .hdr-btn.on {
+      border-color: var(--green); color: var(--green);
+      background: color-mix(in srgb, var(--green) 12%, var(--surface2));
+    }
+    .hdr-icon { font-size: 0.95rem; line-height: 1; }
+
+    .hdr-more {
+      display: none;
+      background: var(--surface2); border: 1px solid var(--border);
+      color: var(--text-muted); border-radius: var(--radius);
+      padding: 6px 11px; font-size: 1.05rem; cursor: pointer;
+      line-height: 1; font-weight: 700; font-family: inherit;
+      transition: border-color .15s, color .15s;
+    }
+    .hdr-more:hover { border-color: var(--accent); color: var(--text); }
+
+    .more-menu {
+      display: none; position: fixed; top: 60px; right: 12px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 6px;
+      box-shadow: 0 6px 24px rgba(0,0,0,.5);
+      min-width: 220px; z-index: 99;
+      flex-direction: column; gap: 1px;
+    }
+    .more-menu.open { display: flex; }
+    .more-menu button, .more-menu a {
+      display: flex; align-items: center; gap: 9px;
+      padding: 9px 10px; background: transparent; border: none;
+      color: var(--text); font-size: 0.85rem; font-weight: 500;
+      cursor: pointer; border-radius: 5px; text-align: left;
+      font-family: inherit; text-decoration: none;
+    }
+    .more-menu button:hover, .more-menu a:hover { background: var(--surface2); }
+    .more-menu .menu-state {
+      margin-left: auto; font-size: 0.68rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .05em;
+      color: var(--text-muted);
+    }
+    .more-menu button.on .menu-state { color: var(--green); }
+    .more-menu .menu-sep { border: none; border-top: 1px solid var(--border); margin: 3px 0; }
+    .more-menu .menu-info {
+      padding: 5px 10px; font-size: 0.7rem; color: var(--text-muted); line-height: 1.3;
+    }
 
     /* ── Layout ── */
     .layout { display: flex; flex: 1; overflow: hidden; }
@@ -163,6 +252,46 @@
     .collapsible-body { display: none; padding: 10px 12px; border-top: 1px solid var(--border); }
     .collapsible-body.open { display: block; }
 
+    /* ── Favoris nations ── */
+    .fav-section {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 8px 10px;
+      margin-bottom: 8px; display: flex; flex-direction: column; gap: 6px;
+    }
+    .fav-current {
+      display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+      font-size: 0.78rem; color: var(--text-muted);
+    }
+    .fav-current .star { color: var(--gold); font-size: 0.95rem; }
+    .fav-current .nation-name {
+      color: var(--gold); font-weight: 700; cursor: pointer; padding: 1px 6px;
+      border-radius: 4px; transition: background .15s;
+    }
+    .fav-current .nation-name:hover { background: color-mix(in srgb, var(--gold) 18%, transparent); }
+    .fav-clear {
+      cursor: pointer; color: var(--text-muted); font-size: 0.85rem;
+      padding: 0 4px; border-radius: 3px; transition: color .15s, background .15s;
+    }
+    .fav-clear:hover { color: var(--red); background: var(--surface); }
+    .fav-recents {
+      display: flex; flex-wrap: wrap; gap: 4px; align-items: center;
+      font-size: 0.75rem; color: var(--text-muted);
+    }
+    .recent-chip {
+      cursor: pointer; padding: 2px 8px; border-radius: 99px;
+      background: var(--surface); border: 1px solid var(--border);
+      font-size: 0.74rem; color: var(--text);
+      transition: border-color .15s, color .15s;
+    }
+    .recent-chip:hover { border-color: var(--accent); color: var(--accent); }
+    .nation-pill { display: inline-flex; align-items: center; gap: 4px; }
+    .fav-star {
+      cursor: pointer; opacity: .35; font-size: 0.85rem; line-height: 1;
+      transition: opacity .15s, color .15s;
+    }
+    .fav-star:hover  { opacity: 1; color: var(--gold); }
+    .fav-star.is-fav { opacity: 1; color: var(--gold); }
+
     /* Nation search input */
     .nation-search {
       width: 100%; background: var(--surface); border: 1px solid var(--border);
@@ -221,20 +350,65 @@
     .boat-country { font-weight: 700; font-size: 0.92rem; }
     .boat-athletes { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
 
-    /* ── Theme toggle ── */
-    .btn-theme {
-      background: var(--surface2); border: 1px solid var(--border);
-      color: var(--text-muted); border-radius: var(--radius);
-      padding: 6px 9px; font-size: 1rem; cursor: pointer; line-height: 1;
-      transition: border-color .15s, color .15s;
-    }
-    .btn-theme:hover { border-color: var(--accent); color: var(--text); }
-
     /* ── Light mode ── */
     body.light {
       --bg: #f1f5f9; --surface: #ffffff; --surface2: #f8fafc;
       --border: #e2e8f0; --text: #1e293b; --text-muted: #64748b;
       --accent: #2563eb; --accent-hover: #1d4ed8;
+    }
+
+    /* ── Toast notifications ── */
+    .toast-container {
+      position: fixed; bottom: 16px; right: 16px; z-index: 300;
+      display: flex; flex-direction: column-reverse; gap: 8px;
+      max-width: calc(100vw - 32px); pointer-events: none;
+    }
+    .toast {
+      background: var(--surface); border: 1px solid var(--accent);
+      border-left: 4px solid var(--accent); border-radius: var(--radius);
+      padding: 12px 14px; box-shadow: 0 8px 24px rgba(0,0,0,.4);
+      width: 320px; max-width: 100%;
+      animation: toastIn .25s ease;
+      pointer-events: auto;
+      display: flex; gap: 10px; align-items: flex-start;
+    }
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to   { opacity: 1; transform: none; }
+    }
+    .toast.fade-out { animation: toastOut .3s ease forwards; }
+    @keyframes toastOut {
+      to { opacity: 0; transform: translateX(20px); }
+    }
+    .toast-icon { font-size: 1.2rem; flex-shrink: 0; line-height: 1; }
+    .toast-body { flex: 1; min-width: 0; }
+    .toast-title { font-weight: 700; font-size: 0.88rem; margin-bottom: 3px; }
+    .toast-text  { font-size: 0.78rem; color: var(--text-muted); line-height: 1.4; }
+    .toast-close {
+      background: none; border: none; color: var(--text-muted);
+      cursor: pointer; padding: 0 4px; font-size: 1rem; line-height: 1;
+      flex-shrink: 0;
+    }
+    .toast-close:hover { color: var(--text); }
+
+    /* ── Header responsive ── */
+    @media (max-width: 920px) {
+      .brand-text p { display: none; }
+      .brand-text h1 { font-size: 0.95rem; }
+      .nav-link { padding: 6px 9px; }
+    }
+    @media (max-width: 760px) {
+      header { padding: 9px 12px; gap: 8px; }
+      .brand-text { display: none; }
+      .nav-label, .hdr-lbl { display: none; }
+      .refresh-status .lbl-text { display: none; }
+      .hdr-btn { padding: 6px 9px; }
+      .nav-link { padding: 6px 9px; }
+    }
+    @media (max-width: 560px) {
+      .hdr-btn#btn-notif,
+      .refresh-status { display: none; }
+      .hdr-more { display: inline-flex; align-items: center; justify-content: center; }
     }
 
     @media (max-width: 720px) {
@@ -247,26 +421,59 @@
 <body>
 
 <header>
-  <div class="logo">📅</div>
-  <div>
-    <h1>World Rowing — Programme</h1>
-    <p>Interface locale · API officielle World Rowing</p>
-  </div>
+  <a class="brand" id="brand-link" href="schedule.html">
+    <div class="logo">📅</div>
+    <div class="brand-text">
+      <h1 id="brand-h1">World Rowing — Schedule</h1>
+      <p id="brand-p">Local interface · Official World Rowing API</p>
+    </div>
+  </a>
+
   <nav class="header-nav">
-    <a class="nav-link" href="index.html">Résultats & Engagés</a>
-    <a class="nav-link active" href="schedule.html">Programme</a>
-    <button class="btn-theme" id="btn-theme" onclick="toggleTheme()" title="Mode clair / sombre">🌙</button>
+    <a class="nav-link" id="nav-results-link" href="index.html">
+      <span class="nav-icon">🏆</span><span class="nav-label" id="nav-results-label">Results</span>
+    </a>
+    <a class="nav-link active" id="nav-schedule-link" href="schedule.html">
+      <span class="nav-icon">📅</span><span class="nav-label" id="nav-schedule-label">Schedule</span>
+    </a>
   </nav>
+
+  <div class="header-tools">
+    <span class="refresh-status" id="refresh-status">
+      <span class="refresh-dot on" id="refresh-dot"></span>
+      <span class="lbl-text" id="refresh-label">—</span>
+    </span>
+    <button class="hdr-btn" id="btn-notif" onclick="toggleNotifications()">
+      <span class="hdr-icon">🔔</span><span class="hdr-lbl" id="btn-notifs-label">Notifs</span>
+    </button>
+    <button class="hdr-btn" id="btn-theme" onclick="toggleTheme()">
+      <span class="hdr-icon" id="theme-icon">🌙</span>
+    </button>
+    <button class="hdr-btn" id="btn-lang" onclick="toggleLang()">
+      <span class="hdr-icon" id="lang-icon">EN</span>
+    </button>
+    <button class="hdr-more" id="btn-more" onclick="toggleMoreMenu(event)">⋯</button>
+  </div>
+
+  <div class="more-menu" id="more-menu">
+    <button onclick="toggleNotifications(); renderMoreMenu();" id="menu-notif">
+      <span>🔔</span><span id="menu-notif-label">Notifications</span><span class="menu-state" id="menu-notif-state">OFF</span>
+    </button>
+    <hr class="menu-sep"/>
+    <div class="menu-info" id="menu-fav-info">No favorite nation</div>
+    <hr class="menu-sep"/>
+    <div class="menu-info" id="menu-refresh-info">Auto-refresh: 30s</div>
+  </div>
 </header>
 
 <div class="layout">
   <aside>
     <div class="filter-group">
-      <label>Année</label>
+      <label id="lbl-year">Year</label>
       <select id="sel-year"></select>
     </div>
     <div class="filter-group">
-      <label>Catégorie</label>
+      <label id="lbl-category">Category</label>
       <select id="sel-category">
         <option value="World Rowing Championships">World Rowing Championships</option>
         <option value="World Rowing Under 19 Championships">World Rowing Under 19 Championships</option>
@@ -278,24 +485,27 @@
         <option value="International Regattas">International Regattas</option>
       </select>
     </div>
-    <button class="btn" id="btn-search">Rechercher</button>
+    <button class="btn" id="btn-search">Search</button>
     <hr />
     <div id="comp-list" style="display:flex;flex-direction:column;gap:6px;"></div>
     <hr />
     <div style="font-size:0.74rem;color:var(--text-muted);line-height:1.6;">
-      <p>L'API est publique (CORS ouvert).</p>
+      <p id="sidebar-proxy-help">The API is public (CORS open).</p>
       <br/>
       <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
         <input type="checkbox" id="use-proxy" />
-        Proxy local (port 8765)
+        <span id="chk-proxy-label">Local proxy (port 8765)</span>
       </label>
     </div>
   </aside>
 
   <main id="main-area">
-    <div class="empty">Sélectionnez une année et une catégorie puis cliquez sur Rechercher.</div>
+    <div class="empty" id="welcome-empty">Pick a year and category, then click Search.</div>
   </main>
 </div>
+
+<!-- ── Toast container ── -->
+<div class="toast-container" id="toast-container"></div>
 
 <!-- ── Start list modal ── -->
 <div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
@@ -314,6 +524,168 @@
 <script>
 "use strict";
 
+// ── i18n : EN par défaut, FR optionnel ──────────────────────────────────
+const I18N = {
+  en: {
+    title_schedule: "World Rowing — Schedule",
+    subtitle: "Local interface · Official World Rowing API",
+    nav_results: "Results", nav_schedule: "Schedule",
+    hdr_notifs: "Notifs",
+    tt_home: "Home", tt_notifs: "Race notifications",
+    tt_theme: "Light / dark mode", tt_more: "More options",
+    tt_lang: "Language", tt_refresh: "Last auto-refresh (30s)",
+    menu_notifs: "Notifications",
+    menu_no_fav: "No favorite nation",
+    menu_fav: "★ Favorite nation: {nation}",
+    menu_refresh_active: "🔄 Auto-refresh active (30s)",
+    menu_refresh_last: "🔄 Last update: {when}",
+    lbl_year: "Year", lbl_category: "Category", btn_search: "Search",
+    sidebar_proxy_help: "The API is public (CORS open).",
+    chk_proxy: "Local proxy (port 8765)",
+    welcome: "Pick a year and category, then click Search.",
+    pick_comp: "Pick a competition in the sidebar.",
+    no_comps: "No competition found.",
+    no_race: "No race found for this competition.",
+    loading_comps: "Searching…", loading_schedule: "Loading schedule…",
+    loading: "Loading…",
+    err_label: "Error",
+    err_help: "Enable \"Use local proxy\" and run",
+    sched_filter_active: "Active filter:",
+    sched_n_races: "{n} race(s)",
+    sched_total: "Total: {n}",
+    sched_official: "Official: {n}",
+    sched_startlist: "Start List: {n}",
+    sched_scheduled: "Scheduled: {n}",
+    sched_cancelled: "Cancelled: {n}",
+    sched_local_time: "local time",
+    sched_no_for_filter: "No race for this selection.",
+    filter_day: "Day",
+    filter_phase: "Phase",
+    filter_class: "Boat class",
+    all: "All",
+    filter_nation_btn: "🏴 Filter by nation",
+    filter_nation_btn_active: "🏴 Filter by nation · {nation}",
+    search_nation: "Search a nation…",
+    fav_label: "Favorite:", recents_label: "Recent:",
+    fav_remove: "Remove from favorites", fav_add: "Set as favorite",
+    load_nations: "Load nations…",
+    nation_pick_first: "Load nations to filter.",
+    modal_close: "Close",
+    modal_loading: "Loading…",
+    modal_no_crew: "No crew registered for this race.",
+    modal_startlist: "Start list",
+    modal_results: "Results",
+    n_crews: "{n} crew(s)",
+    hdr_rank: "Rank", hdr_lane: "Lane", hdr_country: "Country",
+    hdr_athletes: "Athletes", hdr_time: "Time",
+    ago_sec: "{n}s ago", ago_min: "{n} min ago", ago_hour: "{n}h ago",
+    notif_title: "🚣 {nation} — race in 5 min",
+    notif_no_browser: "Your browser doesn't support notifications.",
+  },
+  fr: {
+    title_schedule: "World Rowing — Programme",
+    subtitle: "Interface locale · API officielle World Rowing",
+    nav_results: "Résultats", nav_schedule: "Programme",
+    hdr_notifs: "Notifs",
+    tt_home: "Accueil", tt_notifs: "Notifications de courses",
+    tt_theme: "Mode clair / sombre", tt_more: "Plus d'options",
+    tt_lang: "Langue", tt_refresh: "Dernière mise à jour automatique (30s)",
+    menu_notifs: "Notifications",
+    menu_no_fav: "Aucune nation favorite",
+    menu_fav: "★ Nation favorite : {nation}",
+    menu_refresh_active: "🔄 Auto-refresh actif (30s)",
+    menu_refresh_last: "🔄 Dernière màj : {when}",
+    lbl_year: "Année", lbl_category: "Catégorie", btn_search: "Rechercher",
+    sidebar_proxy_help: "L'API est publique (CORS ouvert).",
+    chk_proxy: "Proxy local (port 8765)",
+    welcome: "Sélectionnez une année et une catégorie puis cliquez sur Rechercher.",
+    pick_comp: "Sélectionnez une compétition dans la barre latérale.",
+    no_comps: "Aucune compétition trouvée.",
+    no_race: "Aucune course trouvée pour cette compétition.",
+    loading_comps: "Recherche…", loading_schedule: "Chargement du programme…",
+    loading: "Chargement…",
+    err_label: "Erreur",
+    err_help: "Activez « Utiliser proxy local » et lancez",
+    sched_filter_active: "Filtre actif :",
+    sched_n_races: "{n} course(s)",
+    sched_total: "Total : {n}",
+    sched_official: "Officiel : {n}",
+    sched_startlist: "Start List : {n}",
+    sched_scheduled: "Prévu : {n}",
+    sched_cancelled: "Annulé : {n}",
+    sched_local_time: "heure locale",
+    sched_no_for_filter: "Aucune course pour cette sélection.",
+    filter_day: "Jour",
+    filter_phase: "Phase",
+    filter_class: "Classe de bateau",
+    all: "Toutes",
+    filter_nation_btn: "🏴 Filtrer par nation",
+    filter_nation_btn_active: "🏴 Filtrer par nation · {nation}",
+    search_nation: "Rechercher une nation…",
+    fav_label: "Favori :", recents_label: "Récents :",
+    fav_remove: "Retirer des favoris", fav_add: "Définir comme favori",
+    load_nations: "Charger les nations…",
+    nation_pick_first: "Chargez les nations pour filtrer.",
+    modal_close: "Fermer",
+    modal_loading: "Chargement…",
+    modal_no_crew: "Aucun équipage enregistré pour cette course.",
+    modal_startlist: "Start list",
+    modal_results: "Résultats",
+    n_crews: "{n} équipage(s)",
+    hdr_rank: "Rang", hdr_lane: "Couloir", hdr_country: "Pays",
+    hdr_athletes: "Athlètes", hdr_time: "Temps",
+    ago_sec: "il y a {n} s", ago_min: "il y a {n} min", ago_hour: "il y a {n} h",
+    notif_title: "🚣 {nation} — course dans 5 min",
+    notif_no_browser: "Votre navigateur ne supporte pas les notifications.",
+  },
+};
+const getLang = () => localStorage.getItem("wr-lang") || "en";
+function t(key, params) {
+  const dict = I18N[getLang()] || I18N.en;
+  let s = dict[key] ?? I18N.en[key] ?? key;
+  if (params) for (const [k, v] of Object.entries(params)) {
+    s = s.split("{" + k + "}").join(String(v));
+  }
+  return s;
+}
+function setLang(lang) {
+  localStorage.setItem("wr-lang", lang);
+  applyStaticI18n();
+  if (typeof render === "function") render();
+  if (typeof renderMoreMenu === "function") renderMoreMenu();
+  if (typeof updateRefreshStatus === "function") updateRefreshStatus();
+  document.getElementById("lang-icon").textContent = lang.toUpperCase();
+}
+function toggleLang() { setLang(getLang() === "en" ? "fr" : "en"); }
+function applyStaticI18n() {
+  const lang = getLang();
+  document.documentElement.lang = lang;
+  document.title = t("title_schedule");
+  const setText = (id, key) => { const el = document.getElementById(id); if (el) el.textContent = t(key); };
+  const setAttr = (id, attr, key) => { const el = document.getElementById(id); if (el) el.setAttribute(attr, t(key)); };
+  setText("brand-h1", "title_schedule");
+  setText("brand-p",  "subtitle");
+  setText("nav-results-label",  "nav_results");
+  setText("nav-schedule-label", "nav_schedule");
+  setText("btn-notifs-label",   "hdr_notifs");
+  setAttr("brand-link", "title", "tt_home");
+  setAttr("nav-results-link",  "title", "nav_results");
+  setAttr("nav-schedule-link", "title", "nav_schedule");
+  setAttr("btn-notif", "title", "tt_notifs");
+  setAttr("btn-theme", "title", "tt_theme");
+  setAttr("btn-more",  "title", "tt_more");
+  setAttr("btn-lang",  "title", "tt_lang");
+  setAttr("refresh-status", "title", "tt_refresh");
+  setText("menu-notif-label", "menu_notifs");
+  setText("lbl-year", "lbl_year");
+  setText("lbl-category", "lbl_category");
+  setText("btn-search", "btn_search");
+  setText("sidebar-proxy-help", "sidebar_proxy_help");
+  setText("chk-proxy-label",    "chk_proxy");
+  const we = document.getElementById("welcome-empty");
+  if (we) we.textContent = t("welcome");
+}
+
 const DIRECT_BASE = "https://world-rowing-api.soticcloud.net/stats/api";
 const PROXY_BASE  = "http://127.0.0.1:8765/stats/api";
 const getBase = () => document.getElementById("use-proxy").checked ? PROXY_BASE : DIRECT_BASE;
@@ -331,6 +703,20 @@ let S = {
   // Start list modal
   modalRace: null, modalDetail: null, loadingModal: false,
   error: null,
+};
+
+// ── Auto-refresh state ────────────────────────────────────────────────────
+let R = {
+  on: true,             // toujours actif (V2 : pas de toggle)
+  intervalId: null,
+  lastRefreshAt: null,
+};
+
+// ── Notifications state ───────────────────────────────────────────────────
+let N = {
+  on: false,
+  intervalId: null,
+  shownToday: new Set(),
 };
 
 // ── Year dropdown ─────────────────────────────────────────────────────────
@@ -363,11 +749,13 @@ function esc(s) {
   return String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 }
 
+function getLocale() { return getLang() === "fr" ? "fr-FR" : "en-GB"; }
+
 function fmtDate(d) {
   if (!d) return "—";
   try {
     return new Date(String(d).replace(" ","T"))
-      .toLocaleDateString("fr-FR", {day:"2-digit", month:"short", year:"numeric"});
+      .toLocaleDateString(getLocale(), {day:"2-digit", month:"short", year:"numeric"});
   } catch { return d; }
 }
 
@@ -375,7 +763,7 @@ function fmtDate(d) {
 function fmtTime(dateString) {
   if (!dateString) return "—";
   try {
-    return new Date(dateString).toLocaleTimeString("fr-FR", {hour:"2-digit", minute:"2-digit"});
+    return new Date(dateString).toLocaleTimeString(getLocale(), {hour:"2-digit", minute:"2-digit"});
   } catch { return "—"; }
 }
 
@@ -383,7 +771,7 @@ function fmtTime(dateString) {
 function fmtDay(dateString) {
   if (!dateString) return "?";
   try {
-    return new Date(dateString).toLocaleDateString("fr-FR", {weekday:"short", day:"2-digit", month:"short"});
+    return new Date(dateString).toLocaleDateString(getLocale(), {weekday:"short", day:"2-digit", month:"short"});
   } catch { return dateString.slice(0,10); }
 }
 
@@ -405,6 +793,42 @@ function phaseBadgeClass(phase) {
   if (p.includes("heat")) return "badge-heat";
   if (p.includes("prelim")) return "badge-prelim";
   return "badge-prelim";
+}
+
+// ── Tri des classes de bateau : Open → Light → Para → Mix, M → W → Mix ──
+function boatClassSortKey(name) {
+  const s = String(name || "").trim();
+  let cat = 3, gender = 2;
+  if (/^PR\d?\s*M/i.test(s))      { cat = 2; gender = 0; }
+  else if (/^PR\d?\s*W/i.test(s)) { cat = 2; gender = 1; }
+  else if (/^PR/i.test(s))        { cat = 2; gender = 2; }
+  else if (/^LM/i.test(s))        { cat = 1; gender = 0; }
+  else if (/^LW/i.test(s))        { cat = 1; gender = 1; }
+  else if (/^M(?!ix)/i.test(s))   { cat = 0; gender = 0; }
+  else if (/^W/i.test(s))         { cat = 0; gender = 1; }
+  else if (/^Mix/i.test(s))       { cat = 0; gender = 2; }
+  return [cat, gender, s];
+}
+function sortClasses(arr) {
+  return [...arr].sort((a, b) => {
+    const ka = boatClassSortKey(a), kb = boatClassSortKey(b);
+    return ka[0] - kb[0] || ka[1] - kb[1] || ka[2].localeCompare(kb[2]);
+  });
+}
+
+// ── Tri des athlètes par poste : C, S, [N décroissants], B ──────────────
+function positionRank(pos) {
+  const p = String(pos ?? "").trim().toUpperCase();
+  if (p === "C" || p.startsWith("COX")) return -1;
+  if (p === "S" || p.startsWith("STR")) return 0;
+  if (p === "B" || p.startsWith("BOW")) return 999;
+  const n = parseInt(p, 10);
+  if (!isNaN(n)) return 100 - n;
+  return 500;
+}
+function sortAthletes(arr, getPos) {
+  const fn = getPos || (a => a.position ?? a.boatPosition);
+  return [...arr].sort((a, b) => positionRank(fn(a)) - positionRank(fn(b)));
 }
 
 function statusBadgeClass(status) {
@@ -465,8 +889,10 @@ async function apiSchedule(competitionId) {
 }
 
 async function apiStartList(raceId) {
+  // Inclure aussi invalidMarkResultCode pour pouvoir afficher les résultats
+  // si la course est officielle (raceStatus = Official)
   const url = buildUrl(`/race/${raceId}`, {
-    "include": "raceStatus,racePhase,raceBoats.raceBoatAthletes.person",
+    "include": "raceStatus,racePhase,raceBoats.raceBoatAthletes.person,raceBoats.invalidMarkResultCode",
   });
   return apiFetch(url);
 }
@@ -486,7 +912,7 @@ function renderCompList() {
   const el = document.getElementById("comp-list");
   if (!S.competitions.length) {
     el.innerHTML = S.searched
-      ? `<div class="empty" style="padding:8px 0;">Aucune compétition.</div>`
+      ? `<div class="empty" style="padding:8px 0;">${t("no_comps")}</div>`
       : "";
     return;
   }
@@ -508,24 +934,24 @@ function render() {
   const main = document.getElementById("main-area");
 
   if (S.loadingRaces) {
-    main.innerHTML = `<div class="loading"><div class="spinner"></div>Chargement du programme…</div>`;
+    main.innerHTML = `<div class="loading"><div class="spinner"></div>${t("loading_schedule")}</div>`;
     return;
   }
 
   if (!S.selectedComp) {
-    main.innerHTML = `<div class="empty">Sélectionnez une compétition dans la barre latérale.</div>`;
+    main.innerHTML = `<div class="empty">${t("pick_comp")}</div>`;
     return;
   }
 
   if (!S.races.length) {
-    main.innerHTML = `<div class="empty">Aucune course trouvée pour cette compétition.</div>`;
+    main.innerHTML = `<div class="empty">${t("no_race")}</div>`;
     return;
   }
 
   // ── Collect metadata ──
   const days    = [...new Set(S.races.map(r => dayKey(r.DateString)))].sort();
   const phases  = [...new Set(S.races.map(r => (r.racePhase?.DisplayName || "?")))].sort();
-  const classes = [...new Set(S.races.map(r => (r.event?.boatClass?.DisplayName || "?")))].sort();
+  const classes = sortClasses([...new Set(S.races.map(r => (r.event?.boatClass?.DisplayName || "?")))]);
 
   // ── Apply filters ──
   let races = S.races;
@@ -567,36 +993,36 @@ function render() {
 
     <!-- Summary bar -->
     <div class="summary-bar">
-      <div class="summary-item"><strong>${total}</strong> course(s)</div>
-      ${official  ? `<div class="summary-item"><span class="badge badge-official">Officiel</span> ${official}</div>` : ""}
+      <div class="summary-item">${t("sched_n_races", { n: `<strong>${total}</strong>` })}</div>
+      ${official  ? `<div class="summary-item"><span class="badge badge-official">${getLang()==="fr"?"Officiel":"Official"}</span> ${official}</div>` : ""}
       ${startList ? `<div class="summary-item"><span class="badge badge-startlist">Start List</span> ${startList}</div>` : ""}
-      ${scheduled ? `<div class="summary-item"><span class="badge badge-scheduled">Prévu</span> ${scheduled}</div>` : ""}
-      ${cancelled ? `<div class="summary-item"><span class="badge badge-cancelled">Annulé</span> ${cancelled}</div>` : ""}
+      ${scheduled ? `<div class="summary-item"><span class="badge badge-scheduled">${getLang()==="fr"?"Prévu":"Scheduled"}</span> ${scheduled}</div>` : ""}
+      ${cancelled ? `<div class="summary-item"><span class="badge badge-cancelled">${getLang()==="fr"?"Annulé":"Cancelled"}</span> ${cancelled}</div>` : ""}
     </div>
 
     <!-- Day tabs -->
     <div>
-      <div class="section-title" style="margin-bottom:6px;">Jour</div>
+      <div class="section-title" style="margin-bottom:6px;">${t("filter_day")}</div>
       <div class="day-tabs">
-        <div class="day-tab ${!S.dayFilter?"active":""}" onclick="setDay(null)">Tous</div>
+        <div class="day-tab ${!S.dayFilter?"active":""}" onclick="setDay(null)">${t("all")}</div>
         ${days.map(d => `<div class="day-tab ${S.dayFilter===d?"active":""}" onclick="setDay('${d}')">${fmtDay(d+"T00:00:00")}</div>`).join("")}
       </div>
     </div>
 
     <!-- Phase filter -->
     <div>
-      <div class="section-title" style="margin-bottom:6px;">Phase</div>
+      <div class="section-title" style="margin-bottom:6px;">${t("filter_phase")}</div>
       <div class="pills">
-        <div class="pill ${!S.phaseFilter?"active":""}" onclick="setPhase(null)">Toutes</div>
+        <div class="pill ${!S.phaseFilter?"active":""}" onclick="setPhase(null)">${t("all")}</div>
         ${phases.map(p => `<div class="pill ${S.phaseFilter===p?"active":""}" onclick="setPhase('${esc(p)}')">${esc(p)}</div>`).join("")}
       </div>
     </div>
 
     <!-- Class filter -->
     <div>
-      <div class="section-title" style="margin-bottom:6px;">Classe de bateau</div>
+      <div class="section-title" style="margin-bottom:6px;">${t("filter_class")}</div>
       <div class="pills">
-        <div class="pill ${!S.classFilter?"active":""}" onclick="setClass(null)">Toutes</div>
+        <div class="pill ${!S.classFilter?"active":""}" onclick="setClass(null)">${t("all")}</div>
         ${classes.map(c => `<div class="pill ${S.classFilter===c?"active":""}" onclick="setClass('${esc(c)}')">${esc(c)}</div>`).join("")}
       </div>
     </div>
@@ -612,11 +1038,11 @@ function render() {
     if (isOpen) {
       if (S.loadingEntries) {
         body = `<div style="display:flex;align-items:center;gap:8px;padding:4px 0;color:var(--text-muted);font-size:0.8rem;">
-                  <div class="spinner" style="width:16px;height:16px;border-width:2px;"></div> Chargement des engagés…
+                  <div class="spinner" style="width:16px;height:16px;border-width:2px;"></div> ${t("loading")}
                 </div>`;
       } else if (!S.entriesLoaded) {
         body = `<button class="btn" style="font-size:0.78rem;padding:6px;" onclick="loadNationEntries()">
-                  Charger les nations
+                  ${t("load_nations")}
                 </button>`;
       } else {
         // Build nations list from entries
@@ -627,25 +1053,56 @@ function render() {
         const q = S.nationSearch.toLowerCase();
         const filtered = q ? allNations.filter(n => n.toLowerCase().includes(q)) : allNations;
 
+        const fav     = getFavNation();
+        const recents = getRecentNations().filter(n => n !== fav).slice(0, 4);
+
+        const favSection = (fav || recents.length) ? `
+          <div class="fav-section">
+            ${fav ? `
+              <div class="fav-current">
+                <span class="star">★</span>
+                <span style="color:var(--text-muted);">${t("fav_label")}</span>
+                <span class="nation-name" onclick="setNation('${esc(fav)}')">${esc(fav)}</span>
+                <span class="fav-clear" title="${t("fav_remove")}" onclick="toggleFavNation('${esc(fav)}')">✕</span>
+              </div>` : ''}
+            ${recents.length ? `
+              <div class="fav-recents">
+                <span>🕐 ${t("recents_label")}</span>
+                ${recents.map(n => `<span class="recent-chip" onclick="setNation('${esc(n)}')">${esc(n)}</span>`).join("")}
+              </div>` : ''}
+          </div>` : '';
+
         body = `
-          <input class="nation-search" type="text" placeholder="🔍 Rechercher une nation…"
+          <input class="nation-search" type="text" placeholder="🔍 ${t("search_nation")}"
             value="${esc(S.nationSearch)}"
             oninput="S.nationSearch=this.value; render()" />
-          <div class="pills" style="max-height:180px;overflow-y:auto;">
-            <div class="pill ${!S.nationFilter?"active":""}" onclick="setNation(null)">Toutes</div>
-            ${filtered.map(n => `<div class="pill ${S.nationFilter===n?"active":""}" onclick="setNation('${esc(n)}')">${esc(n)}</div>`).join("")}
+          ${favSection}
+          <div class="pills" style="max-height:200px;overflow-y:auto;">
+            <div class="pill ${!S.nationFilter?"active":""}" onclick="setNation(null)">${t("all")}</div>
+            ${filtered.map(n => {
+              const isFav    = fav === n;
+              const isActive = S.nationFilter === n;
+              return `<div class="pill nation-pill ${isActive?"active":""}" onclick="setNation('${esc(n)}')">
+                <span class="fav-star ${isFav?"is-fav":""}" title="${isFav?t("fav_remove"):t("fav_add")}"
+                      onclick="event.stopPropagation();toggleFavNation('${esc(n)}')">${isFav?"★":"☆"}</span>
+                <span>${esc(n)}</span>
+              </div>`;
+            }).join("")}
           </div>
           ${S.nationFilter ? `<div style="margin-top:8px;font-size:0.75rem;color:var(--accent);">
-            Filtre actif : <strong>${esc(S.nationFilter)}</strong>
+            ${t("sched_filter_active")} <strong>${esc(S.nationFilter)}</strong>
             <span onclick="setNation(null)" style="cursor:pointer;margin-left:4px;color:var(--text-muted);">✕</span>
           </div>` : ""}`;
       }
     }
 
+    const toggleLabel = S.nationFilter
+      ? t("filter_nation_btn_active", { nation: "<span style='color:var(--accent);'>"+esc(S.nationFilter)+"</span>" })
+      : t("filter_nation_btn");
     return `
       <div class="collapsible-panel">
         <button class="collapsible-toggle ${toggleCls}" onclick="toggleNationPanel()">
-          <span>🌍 Filtre par nation${S.nationFilter ? " · <span style='color:var(--accent);'>"+esc(S.nationFilter)+"</span>" : ""}</span>
+          <span>${toggleLabel}</span>
           <span class="chevron">▶</span>
         </button>
         ${isOpen ? `<div class="collapsible-body open">${body}</div>` : ""}
@@ -654,7 +1111,7 @@ function render() {
 
   // ── Race timeline ──
   if (!races.length) {
-    html += `<div class="empty">Aucune course pour cette sélection.</div>`;
+    html += `<div class="empty">${t("sched_no_for_filter")}</div>`;
   } else {
     for (const day of Object.keys(byDay).sort()) {
       const dayRaces = byDay[day];
@@ -662,7 +1119,7 @@ function render() {
         <div>
           <div style="font-weight:700;font-size:0.88rem;color:var(--text-muted);
                       padding:6px 0;border-bottom:1px solid var(--border);margin-bottom:8px;">
-            📅 ${fmtDay(day+"T12:00:00")} — ${dayRaces.length} course(s)
+            📅 ${fmtDay(day+"T12:00:00")} — ${t("sched_n_races", { n: dayRaces.length })}
           </div>
           <div style="display:flex;flex-direction:column;gap:5px;">`;
 
@@ -699,6 +1156,28 @@ function render() {
   main.innerHTML = html;
 }
 
+// ── Persistence : compétition sélectionnée (partagée index ↔ schedule) ──
+function saveSelectedComp(comp, year, category) {
+  if (!comp) { localStorage.removeItem("wr-selected-comp"); return; }
+  try {
+    localStorage.setItem("wr-selected-comp", JSON.stringify({
+      id: comp.id, year: String(year), category: String(category),
+    }));
+  } catch {}
+}
+function loadSelectedComp() {
+  try {
+    const raw = localStorage.getItem("wr-selected-comp");
+    return raw ? JSON.parse(raw) : null;
+  } catch { return null; }
+}
+function isOngoingComp(c) {
+  const today = new Date().toISOString().slice(0,10);
+  const start = String(c.StartDate || "").slice(0,10);
+  const end   = String(c.EndDate   || "").slice(0,10);
+  return start && end && start <= today && today <= end;
+}
+
 // ── Actions ───────────────────────────────────────────────────────────────
 async function search() {
   const year = document.getElementById("sel-year").value;
@@ -725,6 +1204,17 @@ async function search() {
     renderCompList();
     render();
   }
+
+  // Auto-sélection
+  if (S.competitions.length) {
+    const saved = loadSelectedComp();
+    let target = null;
+    if (saved && saved.year === String(year) && saved.category === cat) {
+      target = S.competitions.find(c => c.id === saved.id) || null;
+    }
+    if (!target) target = S.competitions.find(isOngoingComp) || S.competitions[0];
+    if (target) selectComp(target.id);
+  }
 }
 
 async function selectComp(id) {
@@ -736,11 +1226,13 @@ async function selectComp(id) {
   S.nationFilter = null; S.nationSearch = "";
   S.entries = []; S.entriesLoaded = false; S.nationPanelOpen = false;
   S.modalRace = null; S.modalDetail = null; S.loadingModal = false;
+  saveSelectedComp(comp,
+    document.getElementById("sel-year").value,
+    document.getElementById("sel-category").value);
   renderCompList();
   render();
   try {
     S.races = await apiSchedule(id);
-    // Auto-select current day if competition is ongoing
     const today = new Date().toISOString().slice(0,10);
     const days = [...new Set(S.races.map(r => dayKey(r.DateString)))].sort();
     if (days.includes(today)) S.dayFilter = today;
@@ -758,8 +1250,12 @@ function setPhase(p) { S.phaseFilter = p; render(); }
 function setClass(c) { S.classFilter = c; render(); }
 function setNation(n) {
   S.nationFilter = n;
-  if (n) localStorage.setItem("wr-nation-schedule", n);
-  else   localStorage.removeItem("wr-nation-schedule");
+  if (n) {
+    localStorage.setItem("wr-nation-schedule", n);
+    addRecentNation(n);
+  } else {
+    localStorage.removeItem("wr-nation-schedule");
+  }
   render();
 }
 
@@ -800,11 +1296,14 @@ function renderModal() {
   if (!S.modalRace) { overlay.classList.remove("open"); return; }
   overlay.classList.add("open");
 
-  const race   = S.modalRace;
-  const phase  = race.racePhase?.DisplayName || "—";
-  const cls    = race.event?.boatClass?.DisplayName || "—";
-  const status = race.raceStatus?.DisplayName || "—";
-  const time   = fmtTime(race.DateString);
+  const race    = S.modalRace;
+  const detail  = S.modalDetail?.data;
+  // Statut le plus à jour : depuis le détail si dispo, sinon depuis la liste
+  const status  = detail?.raceStatus?.DisplayName || race.raceStatus?.DisplayName || "—";
+  const phase   = race.racePhase?.DisplayName || "—";
+  const cls     = race.event?.boatClass?.DisplayName || "—";
+  const time    = fmtTime(race.DateString);
+  const isFinal = String(status).toLowerCase() === "official";
 
   document.getElementById("modal-title").textContent = race.DisplayName || race.id;
   document.getElementById("modal-sub").textContent   = `${cls} · ${phase} · ${time} · ${status}`;
@@ -812,44 +1311,90 @@ function renderModal() {
   const body = document.getElementById("modal-body");
 
   if (S.loadingModal) {
-    body.innerHTML = `<div class="loading"><div class="spinner"></div>Chargement de la start list…</div>`;
+    body.innerHTML = `<div class="loading"><div class="spinner"></div>${t("modal_loading")}</div>`;
     return;
   }
 
-  const boats = S.modalDetail?.data?.raceBoats || [];
+  const boats = detail?.raceBoats || [];
   if (!boats.length) {
-    body.innerHTML = `<div class="empty">Aucun équipage enregistré pour cette course.</div>`;
+    body.innerHTML = `<div class="empty">${t("modal_no_crew")}</div>`;
     return;
   }
 
-  // Trier par couloir
+  body.innerHTML = isFinal ? renderResultsView(boats) : renderStartListView(boats);
+}
+
+function renderStartListView(boats) {
   const sorted = [...boats].sort((a, b) => (a.Lane ?? 99) - (b.Lane ?? 99));
-
-  let html = `<div style="font-size:0.74rem;color:var(--text-muted);margin-bottom:10px;">${sorted.length} équipage(s)</div>
+  let html = `<div style="font-size:0.74rem;color:var(--text-muted);margin-bottom:10px;">
+    ${t("modal_startlist")} · ${t("n_crews", { n: sorted.length })}</div>
     <div style="display:flex;flex-direction:column;gap:6px;">`;
-
   for (const boat of sorted) {
-    const code    = boat.DisplayName || "—";
-    const lane    = boat.Lane ?? "—";
-    const ath     = boat.raceBoatAthletes || [];
-    const names   = ath.length
+    const code  = boat.DisplayName || "—";
+    const lane  = boat.Lane ?? "—";
+    const ath   = sortAthletes(boat.raceBoatAthletes || [], a => a.boatPosition);
+    const names = ath.length
       ? ath.map(a => {
           const p = a.person || {};
-          return [p.FirstName, p.LastName].filter(Boolean).join(" ") || p.DisplayName || "?";
+          const nm = [p.FirstName, p.LastName].filter(Boolean).join(" ") || p.DisplayName || "?";
+          return a.boatPosition ? `${a.boatPosition}· ${nm}` : nm;
         }).join(" · ")
       : "—";
-
     html += `
       <div class="boat-row">
-        <div class="boat-lane" title="Couloir">${esc(lane)}</div>
+        <div class="boat-lane" title="${t("hdr_lane")}">${esc(lane)}</div>
         <div style="flex:1;min-width:0;">
           <div class="boat-country">${esc(code)}</div>
           <div class="boat-athletes">${esc(names)}</div>
         </div>
       </div>`;
   }
+  return html + `</div>`;
+}
 
-  body.innerHTML = html + `</div>`;
+function renderResultsView(boats) {
+  // Trier par rang (les bateaux disqualifiés/sans rang vont à la fin)
+  const sorted = [...boats].sort((a, b) => (a.Rank ?? 99) - (b.Rank ?? 99));
+
+  const fmtT = (t) => !t ? "—" : String(t).trim().replace(/^00:/, "");
+  const rk   = (r) => r==1?"🥇":r==2?"🥈":r==3?"🥉":(r||"—");
+  const rkCls= (r) => r==1?"rank-1":r==2?"rank-2":r==3?"rank-3":"";
+
+  const thStyle = `style="text-align:left;padding:8px 12px;background:var(--surface2);border-bottom:1px solid var(--border);font-size:0.7rem;text-transform:uppercase;color:var(--text-muted);"`;
+  let html = `<div style="font-size:0.74rem;color:var(--text-muted);margin-bottom:10px;">
+    ${t("modal_results")} · ${t("n_crews", { n: sorted.length })}</div>
+    <div class="table-wrap"><table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
+    <thead><tr>
+      <th ${thStyle}>${t("hdr_rank")}</th>
+      <th ${thStyle}>${t("hdr_lane")}</th>
+      <th ${thStyle}>${t("hdr_country")}</th>
+      <th ${thStyle}>${t("hdr_athletes")}</th>
+      <th ${thStyle}>${t("hdr_time")}</th>
+    </tr></thead><tbody>`;
+
+  for (const boat of sorted) {
+    const mark   = boat.invalidMarkResultCode;
+    const markName = mark ? (typeof mark === "object" ? mark.DisplayName : mark) : null;
+    const ath    = sortAthletes(boat.raceBoatAthletes || [], a => a.boatPosition);
+    const names  = ath.length
+      ? ath.map(a => {
+          const p = a.person || {};
+          const nm = [p.FirstName, p.LastName].filter(Boolean).join(" ") || p.DisplayName || "?";
+          return a.boatPosition ? `${a.boatPosition}· ${nm}` : nm;
+        }).join(" · ")
+      : "—";
+    const timeStr = markName ? `<span class="badge badge-cancelled">${esc(markName)}</span>`
+                             : `<span style="font-family:monospace;">${esc(fmtT(boat.ResultTime))}</span>`;
+    html += `
+      <tr style="border-bottom:1px solid var(--border);">
+        <td class="${rkCls(boat.Rank)}" style="padding:8px 12px;font-weight:700;">${rk(boat.Rank)}</td>
+        <td style="padding:8px 12px;color:var(--text-muted);">${esc(boat.Lane ?? "—")}</td>
+        <td style="padding:8px 12px;font-weight:600;">${esc(boat.DisplayName || "—")}</td>
+        <td style="padding:8px 12px;color:var(--text-muted);font-size:0.78rem;">${esc(names)}</td>
+        <td style="padding:8px 12px;">${timeStr}</td>
+      </tr>`;
+  }
+  return html + `</tbody></table></div>`;
 }
 
 function closeModal() {
@@ -863,10 +1408,11 @@ function handleOverlayClick(e) {
 
 document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
 
-// ── Restaurer nation sauvegardée ─────────────────────────────────────────
+// ── Restaurer nation sauvegardée (ou favorite) ───────────────────────────
 function tryRestoreNation() {
-  const saved = localStorage.getItem("wr-nation-schedule");
-  if (!saved || !S.entriesLoaded) return;
+  if (!S.entriesLoaded) return;
+  const saved = localStorage.getItem("wr-nation-schedule") || getFavNation();
+  if (!saved) return;
   const code   = nationCodeFromEntries(saved);
   const exists = S.races.some(r => (r.raceBoats || []).some(b => b.DisplayName === code));
   if (exists) {
@@ -875,21 +1421,280 @@ function tryRestoreNation() {
   }
 }
 
+// ── Favoris nations (partagés via localStorage) ──────────────────────────
+function getFavNation() { return localStorage.getItem("wr-fav-nation") || null; }
+function setFavNationStored(n) {
+  if (!n) localStorage.removeItem("wr-fav-nation");
+  else    localStorage.setItem("wr-fav-nation", n);
+}
+function getRecentNations() {
+  try { return JSON.parse(localStorage.getItem("wr-fav-recents") || "[]"); }
+  catch { return []; }
+}
+function addRecentNation(n) {
+  if (!n) return;
+  const list = getRecentNations().filter(x => x !== n);
+  list.unshift(n);
+  localStorage.setItem("wr-fav-recents", JSON.stringify(list.slice(0, 5)));
+}
+function toggleFavNation(n) {
+  const cur = getFavNation();
+  setFavNationStored(cur === n ? null : n);
+  renderMoreMenu();
+  render();
+}
+
 // ── Thème clair / sombre ─────────────────────────────────────────────────
 function initTheme() {
-  if (localStorage.getItem("wr-theme") === "light") {
-    document.body.classList.add("light");
-    document.getElementById("btn-theme").textContent = "🌙";
-  }
+  const isLight = localStorage.getItem("wr-theme") === "light";
+  if (isLight) document.body.classList.add("light");
+  document.getElementById("theme-icon").textContent = isLight ? "☀️" : "🌙";
 }
 function toggleTheme() {
   const isLight = document.body.classList.toggle("light");
   localStorage.setItem("wr-theme", isLight ? "light" : "dark");
-  document.getElementById("btn-theme").textContent = isLight ? "🌙" : "☀️";
+  document.getElementById("theme-icon").textContent = isLight ? "☀️" : "🌙";
+}
+
+// ── Header : more menu ───────────────────────────────────────────────────
+function toggleMoreMenu(e) {
+  if (e) e.stopPropagation();
+  const m = document.getElementById("more-menu");
+  const willOpen = !m.classList.contains("open");
+  m.classList.toggle("open", willOpen);
+  if (willOpen) renderMoreMenu();
+}
+function closeMoreMenu() {
+  document.getElementById("more-menu").classList.remove("open");
+}
+function renderMoreMenu() {
+  const notifOn = localStorage.getItem("wr-notif-enabled") === "on";
+  const fav     = localStorage.getItem("wr-fav-nation");
+
+  const elN = document.getElementById("menu-notif");
+  elN.classList.toggle("on", notifOn);
+  document.getElementById("menu-notif-state").textContent = notifOn ? "ON" : "OFF";
+
+  document.getElementById("menu-fav-info").textContent = fav
+    ? t("menu_fav", { nation: fav })
+    : t("menu_no_fav");
+
+  const last = R.lastRefreshAt;
+  document.getElementById("menu-refresh-info").textContent = last
+    ? t("menu_refresh_last", { when: fmtRelative(last) })
+    : t("menu_refresh_active");
+}
+
+document.addEventListener("click", e => {
+  const m = document.getElementById("more-menu");
+  if (!m.classList.contains("open")) return;
+  if (e.target.closest("#more-menu") || e.target.closest("#btn-more")) return;
+  m.classList.remove("open");
+});
+
+// ── Fmt : "Xs ago / il y a X min" ────────────────────────────────────────
+function fmtRelative(ts) {
+  if (!ts) return "—";
+  const sec = Math.max(0, Math.floor((Date.now() - ts) / 1000));
+  if (sec < 60)   return t("ago_sec",  { n: sec });
+  if (sec < 3600) return t("ago_min",  { n: Math.floor(sec/60) });
+  return            t("ago_hour", { n: Math.floor(sec/3600) });
+}
+
+// ── Notifications toggle ──────────────────────────────────────────────────
+function toggleNotifications() {
+  if (!N.on) {
+    if (!("Notification" in window)) {
+      alert(t("notif_no_browser"));
+      return;
+    }
+    if (Notification.permission === "default") {
+      Notification.requestPermission().then(p => {
+        if (p === "granted" || p === "denied") {
+          N.on = true;
+          localStorage.setItem("wr-notif-enabled", "on");
+          document.getElementById("btn-notif").classList.toggle("on", true);
+          startNotificationLoop();
+        }
+      });
+      return;
+    }
+    N.on = true;
+    localStorage.setItem("wr-notif-enabled", "on");
+    document.getElementById("btn-notif").classList.toggle("on", true);
+    startNotificationLoop();
+  } else {
+    N.on = false;
+    localStorage.setItem("wr-notif-enabled", "off");
+    document.getElementById("btn-notif").classList.toggle("on", false);
+    stopNotificationLoop();
+  }
+}
+
+// ── Auto-refresh : implémentation (toujours actif, pas de pause hidden) ──
+async function refreshAll() {
+  if (!S.selectedComp) {
+    R.lastRefreshAt = Date.now();
+    updateRefreshStatus();
+    return;
+  }
+  const cId = S.selectedComp.id;
+  try {
+    const races = await apiSchedule(cId);
+    if (S.selectedComp?.id === cId) S.races = races;
+    R.lastRefreshAt = Date.now();
+    render();
+    updateRefreshStatus();
+    if (document.getElementById("more-menu")?.classList.contains("open")) renderMoreMenu();
+  } catch(e) {
+    console.warn("[auto-refresh]", e);
+  }
+}
+
+function startAutoRefresh() {
+  if (R.intervalId) clearInterval(R.intervalId);
+  R.intervalId = setInterval(refreshAll, 30000);
+  refreshAll();
+}
+function stopAutoRefresh() {
+  if (R.intervalId) { clearInterval(R.intervalId); R.intervalId = null; }
+}
+
+setInterval(updateRefreshStatus, 5000);
+
+// ── Notifications : implémentation ───────────────────────────────────────
+function getNotifShownKey() {
+  return `wr-notif-shown-${new Date().toISOString().slice(0,10)}`;
+}
+function loadShownToday() {
+  try { return new Set(JSON.parse(localStorage.getItem(getNotifShownKey()) || "[]")); }
+  catch { return new Set(); }
+}
+function saveShownToday(set) {
+  localStorage.setItem(getNotifShownKey(), JSON.stringify([...set]));
+}
+
+function showToast(title, text) {
+  const container = document.getElementById("toast-container");
+  if (!container) return;
+  const el = document.createElement("div");
+  el.className = "toast";
+  el.innerHTML = `
+    <span class="toast-icon">🔔</span>
+    <div class="toast-body">
+      <div class="toast-title"></div>
+      <div class="toast-text"></div>
+    </div>
+    <button class="toast-close" aria-label="Fermer">✕</button>`;
+  el.querySelector(".toast-title").textContent = title;
+  el.querySelector(".toast-text").textContent  = text;
+  el.querySelector(".toast-close").addEventListener("click", () => removeToast(el));
+  container.appendChild(el);
+  setTimeout(() => removeToast(el), 8000);
+}
+function removeToast(el) {
+  if (!el || !el.isConnected) return;
+  el.classList.add("fade-out");
+  setTimeout(() => el.remove(), 300);
+}
+
+function sendBrowserNotif(title, body) {
+  if (!("Notification" in window)) return;
+  if (Notification.permission !== "granted") return;
+  try { new Notification(title, { body, tag: title.slice(0,20) }); }
+  catch(e) { /* ignore */ }
+}
+
+async function checkUpcomingRaces() {
+  if (!N.on) return;
+  const fav = getFavNation();
+  if (!fav) return;
+  if (!S.races || !S.races.length) return;
+
+  let code = fav;
+  if (S.entriesLoaded && S.entries.length) {
+    const resolved = nationCodeFromEntries(fav);
+    if (resolved) code = resolved;
+  }
+
+  N.shownToday = loadShownToday();
+  const now = Date.now();
+  for (const race of S.races) {
+    const rid = String(race.id);
+    if (N.shownToday.has(rid)) continue;
+    if (!race.DateString) continue;
+    const t = new Date(race.DateString).getTime();
+    if (isNaN(t)) continue;
+    const sec = (t - now) / 1000;
+    if (sec <= 0 || sec > 300) continue;
+
+    const inRace = (race.raceBoats || []).some(b => b.DisplayName === code);
+    if (!inRace) continue;
+
+    notifyRace(race, fav);
+    N.shownToday.add(rid);
+  }
+  saveShownToday(N.shownToday);
+}
+
+function notifyRace(race, nation) {
+  const className = race.event?.boatClass?.DisplayName || "";
+  const phase     = race.racePhase?.DisplayName || "";
+  const time      = fmtTime(race.DateString);
+  const title = t("notif_title", { nation });
+  const body  = [race.DisplayName, className, phase, time].filter(Boolean).join(" · ");
+  showToast(title, body);
+  sendBrowserNotif(title, body);
+}
+
+function startNotificationLoop() {
+  if (N.intervalId) clearInterval(N.intervalId);
+  N.shownToday = loadShownToday();
+  setTimeout(checkUpcomingRaces, 1500);
+  N.intervalId = setInterval(checkUpcomingRaces, 30000);
+}
+function stopNotificationLoop() {
+  if (N.intervalId) { clearInterval(N.intervalId); N.intervalId = null; }
+}
+
+function updateRefreshStatus() {
+  const lbl = document.getElementById("refresh-label");
+  if (!R.lastRefreshAt) { lbl.textContent = "—"; return; }
+  lbl.textContent = fmtRelative(R.lastRefreshAt);
+}
+
+function initHeaderState() {
+  // Auto-refresh toujours actif (V2 : plus de toggle)
+  startAutoRefresh();
+  updateRefreshStatus();
+
+  if (localStorage.getItem("wr-notif-enabled") === "on"
+      && "Notification" in window
+      && Notification.permission === "granted") {
+    N.on = true;
+    document.getElementById("btn-notif").classList.add("on");
+    startNotificationLoop();
+  }
 }
 
 document.getElementById("btn-search").addEventListener("click", search);
 initTheme();
+applyStaticI18n();
+document.getElementById("lang-icon").textContent = getLang().toUpperCase();
+initHeaderState();
+
+// Auto-search au chargement
+function autoSearchOnLoad() {
+  const saved = loadSelectedComp();
+  if (saved) {
+    const yearSel = document.getElementById("sel-year");
+    const catSel  = document.getElementById("sel-category");
+    if ([...yearSel.options].some(o => o.value === saved.year))    yearSel.value = saved.year;
+    if ([...catSel.options].some(o => o.value === saved.category)) catSel.value = saved.category;
+  }
+  search();
+}
+autoSearchOnLoad();
 </script>
 
 </body>

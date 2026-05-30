@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>World Rowing — Résultats</title>
+  <title>World Rowing — Results</title>
   <style>
     :root {
       --bg: #0f1117;
@@ -28,18 +28,116 @@
       min-height: 100vh; display: flex; flex-direction: column;
     }
 
+    /* ── Header refondu (responsive) ── */
     header {
       background: var(--surface); border-bottom: 1px solid var(--border);
-      padding: 14px 24px; display: flex; align-items: center; gap: 12px;
-      position: sticky; top: 0; z-index: 100;
+      padding: 10px 20px; display: flex; align-items: center; gap: 12px;
+      position: sticky; top: 0; z-index: 100; min-height: 58px;
     }
-    header .logo {
+    .brand {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; color: inherit; flex-shrink: 0;
+    }
+    .brand .logo {
       width: 34px; height: 34px; background: var(--accent); border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       font-size: 16px; flex-shrink: 0;
     }
-    header h1 { font-size: 1.1rem; font-weight: 600; }
-    header p  { font-size: 0.75rem; color: var(--text-muted); }
+    .brand-text h1 { font-size: 1.05rem; font-weight: 600; line-height: 1.2; }
+    .brand-text p  { font-size: 0.72rem; color: var(--text-muted); line-height: 1.2; margin-top: 2px; }
+
+    .header-nav { display: flex; gap: 4px; align-items: center; }
+    .nav-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 11px; border-radius: var(--radius);
+      font-size: 0.82rem; font-weight: 500;
+      border: 1px solid var(--border); color: var(--text-muted);
+      cursor: pointer; text-decoration: none;
+      transition: border-color .15s, color .15s, background .15s;
+      white-space: nowrap;
+    }
+    .nav-link:hover  { border-color: var(--accent); color: var(--accent); }
+    .nav-link.active {
+      border-color: var(--accent); color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+    }
+    .nav-icon  { font-size: 0.95rem; line-height: 1; }
+
+    .header-tools {
+      margin-left: auto;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .refresh-status {
+      font-size: 0.7rem; color: var(--text-muted);
+      padding: 0 4px; white-space: nowrap;
+      display: inline-flex; align-items: center; gap: 5px;
+    }
+    .refresh-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--text-muted); flex-shrink: 0;
+    }
+    .refresh-dot.on { background: var(--green); animation: pulse 2s infinite; }
+    @keyframes pulse {
+      0%,100% { opacity: 1; }
+      50%     { opacity: .35; }
+    }
+    .hdr-btn {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 6px 11px;
+      background: var(--surface2); border: 1px solid var(--border);
+      color: var(--text-muted); border-radius: var(--radius);
+      font-size: 0.8rem; font-weight: 600; cursor: pointer;
+      transition: border-color .15s, color .15s, background .15s;
+      white-space: nowrap; font-family: inherit; line-height: 1;
+    }
+    .hdr-btn:hover { border-color: var(--accent); color: var(--text); }
+    .hdr-btn.active {
+      border-color: var(--accent); color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 15%, var(--surface2));
+    }
+    .hdr-btn.on {
+      border-color: var(--green); color: var(--green);
+      background: color-mix(in srgb, var(--green) 12%, var(--surface2));
+    }
+    .hdr-icon { font-size: 0.95rem; line-height: 1; }
+
+    .hdr-more {
+      display: none;
+      background: var(--surface2); border: 1px solid var(--border);
+      color: var(--text-muted); border-radius: var(--radius);
+      padding: 6px 11px; font-size: 1.05rem; cursor: pointer;
+      line-height: 1; font-weight: 700; font-family: inherit;
+      transition: border-color .15s, color .15s;
+    }
+    .hdr-more:hover { border-color: var(--accent); color: var(--text); }
+
+    .more-menu {
+      display: none; position: fixed; top: 60px; right: 12px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 6px;
+      box-shadow: 0 6px 24px rgba(0,0,0,.5);
+      min-width: 220px; z-index: 99;
+      flex-direction: column; gap: 1px;
+    }
+    .more-menu.open { display: flex; }
+    .more-menu button, .more-menu a {
+      display: flex; align-items: center; gap: 9px;
+      padding: 9px 10px; background: transparent; border: none;
+      color: var(--text); font-size: 0.85rem; font-weight: 500;
+      cursor: pointer; border-radius: 5px; text-align: left;
+      font-family: inherit; text-decoration: none;
+    }
+    .more-menu button:hover, .more-menu a:hover { background: var(--surface2); }
+    .more-menu .menu-state {
+      margin-left: auto; font-size: 0.68rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .05em;
+      color: var(--text-muted);
+    }
+    .more-menu button.on .menu-state { color: var(--green); }
+    .more-menu .menu-sep { border: none; border-top: 1px solid var(--border); margin: 3px 0; }
+    .more-menu .menu-info {
+      padding: 5px 10px; font-size: 0.7rem; color: var(--text-muted); line-height: 1.3;
+    }
 
     .layout { display: flex; flex: 1; overflow: hidden; }
 
@@ -198,17 +296,6 @@
     .pill.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 18%, var(--surface2)); color: var(--accent); font-weight: 600; }
 
     /* ── Compare mode ── */
-    .btn-compare {
-      margin-left: auto; padding: 7px 14px;
-      background: var(--surface2); border: 1px solid var(--border);
-      color: var(--text-muted); border-radius: var(--radius);
-      font-size: 0.83rem; font-weight: 600; cursor: pointer;
-      transition: border-color .15s, color .15s, background .15s; white-space: nowrap;
-    }
-    .btn-compare:hover  { border-color: var(--accent); color: var(--text); }
-    .btn-compare.active { border-color: var(--accent); color: var(--accent);
-                          background: color-mix(in srgb, var(--accent) 15%, var(--surface2)); }
-
     .cmp-layout { display: none; flex: 1; overflow: hidden; }
     .cmp-layout.open { display: flex; }
 
@@ -267,6 +354,46 @@
     .nation-delta-pos  { color: var(--green); font-weight: 700; }
     .nation-delta-neg  { color: var(--red);   font-weight: 700; }
     .nation-delta-zero { color: var(--text-muted); }
+
+    /* ── Compare : doublons intra-compétition (Par bateau) ── */
+    .dup-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 10px;
+    }
+    .dup-col {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 8px 10px;
+      display: flex; flex-direction: column; gap: 3px;
+    }
+    .dup-col-title {
+      font-weight: 700; font-size: 0.85rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 5px; margin-bottom: 3px;
+    }
+    .dup-ath {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.78rem; padding: 2px 0;
+    }
+    .dup-pos {
+      min-width: 20px; text-align: center;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 3px; font-size: 0.7rem;
+      font-weight: 700; color: var(--text-muted);
+      padding: 1px 4px; flex-shrink: 0;
+    }
+    .dup-ath.common { color: var(--gold); font-weight: 600; }
+    .dup-ath.common .dup-pos {
+      color: var(--gold);
+      border-color: color-mix(in srgb, var(--gold) 50%, transparent);
+    }
+    .dup-block-title {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+      padding: 8px 14px; border-bottom: 1px solid var(--border);
+      background: color-mix(in srgb, var(--surface2) 70%, transparent);
+    }
+    .dup-block-title .name { font-weight: 700; }
+    .dup-block-title .meta { font-size: 0.75rem; color: var(--text-muted); }
 
     /* ── Nation cards ── */
     .nation-card {
@@ -347,6 +474,27 @@
 
     .modal-body { overflow-y: auto; padding: 18px 20px; flex: 1; }
 
+    /* ── Header responsive ── */
+    @media (max-width: 920px) {
+      .brand-text p { display: none; }
+      .brand-text h1 { font-size: 0.95rem; }
+      .nav-link { padding: 6px 9px; }
+    }
+    @media (max-width: 760px) {
+      header { padding: 9px 12px; gap: 8px; }
+      .brand-text { display: none; }
+      .nav-label, .hdr-lbl { display: none; }
+      .refresh-status .lbl-text { display: none; }
+      .hdr-btn { padding: 6px 9px; }
+      .nav-link { padding: 6px 9px; }
+    }
+    @media (max-width: 560px) {
+      .hdr-btn#btn-compare,
+      .hdr-btn#btn-notif,
+      .refresh-status { display: none; }
+      .hdr-more { display: inline-flex; align-items: center; justify-content: center; }
+    }
+
     @media (max-width: 720px) {
       .layout { flex-direction: column; }
       aside { width: 100%; border-right: none; border-bottom: 1px solid var(--border); }
@@ -366,6 +514,46 @@
     .nation-search { width: 100%; background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 6px 9px; border-radius: var(--radius); font-size: 0.8rem; outline: none; margin-bottom: 7px; }
     .nation-search:focus { border-color: var(--accent); }
 
+    /* ── Favoris nations ── */
+    .fav-section {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 8px 10px;
+      margin-bottom: 8px; display: flex; flex-direction: column; gap: 6px;
+    }
+    .fav-current {
+      display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+      font-size: 0.78rem; color: var(--text-muted);
+    }
+    .fav-current .star { color: var(--gold); font-size: 0.95rem; }
+    .fav-current .nation-name {
+      color: var(--gold); font-weight: 700; cursor: pointer; padding: 1px 6px;
+      border-radius: 4px; transition: background .15s;
+    }
+    .fav-current .nation-name:hover { background: color-mix(in srgb, var(--gold) 18%, transparent); }
+    .fav-clear {
+      cursor: pointer; color: var(--text-muted); font-size: 0.85rem;
+      padding: 0 4px; border-radius: 3px; transition: color .15s, background .15s;
+    }
+    .fav-clear:hover { color: var(--red); background: var(--surface); }
+    .fav-recents {
+      display: flex; flex-wrap: wrap; gap: 4px; align-items: center;
+      font-size: 0.75rem; color: var(--text-muted);
+    }
+    .recent-chip {
+      cursor: pointer; padding: 2px 8px; border-radius: 99px;
+      background: var(--surface); border: 1px solid var(--border);
+      font-size: 0.74rem; color: var(--text);
+      transition: border-color .15s, color .15s;
+    }
+    .recent-chip:hover { border-color: var(--accent); color: var(--accent); }
+    .nation-pill { display: inline-flex; align-items: center; gap: 4px; }
+    .fav-star {
+      cursor: pointer; opacity: .35; font-size: 0.85rem; line-height: 1;
+      transition: opacity .15s, color .15s;
+    }
+    .fav-star:hover     { opacity: 1; color: var(--gold); }
+    .fav-star.is-fav    { opacity: 1; color: var(--gold); }
+
     /* ── Inline race detail accordion ── */
     .race-item.open {
       border-color: var(--accent);
@@ -382,47 +570,110 @@
     .race-chevron { font-size: 0.6rem; color: var(--text-muted); transition: transform .2s; flex-shrink: 0; margin-left: 6px; }
     .race-item.open .race-chevron { transform: rotate(180deg); color: var(--accent); }
 
-    /* ── Theme toggle ── */
-    .btn-theme {
-      background: var(--surface2); border: 1px solid var(--border);
-      color: var(--text-muted); border-radius: var(--radius);
-      padding: 6px 9px; font-size: 1rem; cursor: pointer; line-height: 1;
-      transition: border-color .15s, color .15s;
-    }
-    .btn-theme:hover { border-color: var(--accent); color: var(--text); }
-
     /* ── Light mode ── */
     body.light {
       --bg: #f1f5f9; --surface: #ffffff; --surface2: #f8fafc;
       --border: #e2e8f0; --text: #1e293b; --text-muted: #64748b;
       --accent: #2563eb; --accent-hover: #1d4ed8;
     }
+
+    /* ── Toast notifications ── */
+    .toast-container {
+      position: fixed; bottom: 16px; right: 16px; z-index: 300;
+      display: flex; flex-direction: column-reverse; gap: 8px;
+      max-width: calc(100vw - 32px); pointer-events: none;
+    }
+    .toast {
+      background: var(--surface); border: 1px solid var(--accent);
+      border-left: 4px solid var(--accent); border-radius: var(--radius);
+      padding: 12px 14px; box-shadow: 0 8px 24px rgba(0,0,0,.4);
+      width: 320px; max-width: 100%;
+      animation: toastIn .25s ease;
+      pointer-events: auto;
+      display: flex; gap: 10px; align-items: flex-start;
+    }
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to   { opacity: 1; transform: none; }
+    }
+    .toast.fade-out { animation: toastOut .3s ease forwards; }
+    @keyframes toastOut {
+      to { opacity: 0; transform: translateX(20px); }
+    }
+    .toast-icon { font-size: 1.2rem; flex-shrink: 0; line-height: 1; }
+    .toast-body { flex: 1; min-width: 0; }
+    .toast-title { font-weight: 700; font-size: 0.88rem; margin-bottom: 3px; }
+    .toast-text  { font-size: 0.78rem; color: var(--text-muted); line-height: 1.4; }
+    .toast-close {
+      background: none; border: none; color: var(--text-muted);
+      cursor: pointer; padding: 0 4px; font-size: 1rem; line-height: 1;
+      flex-shrink: 0;
+    }
+    .toast-close:hover { color: var(--text); }
   </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">🚣</div>
-  <div>
-    <h1>World Rowing — Résultats</h1>
-    <p>Interface locale · API officielle World Rowing</p>
-  </div>
-  <nav style="margin-left:auto;display:flex;gap:8px;align-items:center;">
-    <a href="index.html"    style="padding:6px 12px;border-radius:8px;font-size:0.8rem;font-weight:500;border:1px solid var(--accent);color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,var(--surface));text-decoration:none;">Résultats & Engagés</a>
-    <a href="schedule.html" style="padding:6px 12px;border-radius:8px;font-size:0.8rem;font-weight:500;border:1px solid var(--border);color:var(--text-muted);text-decoration:none;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">📅 Programme</a>
+  <a class="brand" id="brand-link" href="index.html">
+    <div class="logo">🚣</div>
+    <div class="brand-text">
+      <h1 id="brand-h1">World Rowing — Results</h1>
+      <p id="brand-p">Local interface · Official World Rowing API</p>
+    </div>
+  </a>
+
+  <nav class="header-nav">
+    <a class="nav-link active" id="nav-results-link" href="index.html">
+      <span class="nav-icon">🏆</span><span class="nav-label" id="nav-results-label">Results</span>
+    </a>
+    <a class="nav-link" id="nav-schedule-link" href="schedule.html">
+      <span class="nav-icon">📅</span><span class="nav-label" id="nav-schedule-label">Schedule</span>
+    </a>
   </nav>
-  <button class="btn-theme"   id="btn-theme"   onclick="toggleTheme()" title="Mode clair / sombre">🌙</button>
-  <button class="btn-compare" id="btn-compare" onclick="toggleCompare()">🔀 Comparer</button>
+
+  <div class="header-tools">
+    <span class="refresh-status" id="refresh-status">
+      <span class="refresh-dot on" id="refresh-dot"></span>
+      <span class="lbl-text" id="refresh-label">—</span>
+    </span>
+    <button class="hdr-btn" id="btn-notif" onclick="toggleNotifications()">
+      <span class="hdr-icon">🔔</span><span class="hdr-lbl" id="btn-notifs-label">Notifs</span>
+    </button>
+    <button class="hdr-btn" id="btn-compare" onclick="toggleCompare()">
+      <span class="hdr-icon">🔀</span><span class="hdr-lbl" id="btn-compare-label">Compare</span>
+    </button>
+    <button class="hdr-btn" id="btn-theme" onclick="toggleTheme()">
+      <span class="hdr-icon" id="theme-icon">🌙</span>
+    </button>
+    <button class="hdr-btn" id="btn-lang" onclick="toggleLang()">
+      <span class="hdr-icon" id="lang-icon">EN</span>
+    </button>
+    <button class="hdr-more" id="btn-more" onclick="toggleMoreMenu(event)">⋯</button>
+  </div>
+
+  <div class="more-menu" id="more-menu">
+    <button onclick="toggleNotifications(); renderMoreMenu();" id="menu-notif">
+      <span>🔔</span><span id="menu-notif-label">Notifications</span><span class="menu-state" id="menu-notif-state">OFF</span>
+    </button>
+    <button onclick="toggleCompare(); closeMoreMenu();" id="menu-compare">
+      <span>🔀</span><span id="menu-compare-label">Compare</span>
+    </button>
+    <hr class="menu-sep"/>
+    <div class="menu-info" id="menu-fav-info">No favorite nation</div>
+    <hr class="menu-sep"/>
+    <div class="menu-info" id="menu-refresh-info">Auto-refresh: 30s</div>
+  </div>
 </header>
 
 <div class="layout" id="normal-layout">
   <aside>
     <div class="filter-group">
-      <label>Année</label>
+      <label id="lbl-year">Year</label>
       <select id="sel-year"></select>
     </div>
     <div class="filter-group">
-      <label>Catégorie</label>
+      <label id="lbl-category">Category</label>
       <select id="sel-category">
         <option value="World Rowing Championships">World Rowing Championships</option>
         <option value="World Rowing Under 19 Championships">World Rowing Under 19 Championships</option>
@@ -434,23 +685,23 @@
         <option value="International Regattas">International Regattas</option>
       </select>
     </div>
-    <button class="btn" id="btn-search">Rechercher</button>
+    <button class="btn" id="btn-search">Search</button>
     <hr />
     <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.65;">
-      <p>Sélectionnez une année et une catégorie puis cliquez sur Rechercher.</p>
+      <p id="sidebar-help">Pick a year and category, then click Search.</p>
       <br/>
-      <p>L'API est publique (CORS ouvert). Si des erreurs surviennent, lancez le proxy :</p>
+      <p id="sidebar-proxy-help">The API is public (CORS open). If errors occur, run the proxy:</p>
       <code style="display:block; margin-top:6px;">python proxy.py</code>
       <br/>
       <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
         <input type="checkbox" id="use-proxy" />
-        Utiliser proxy local (port 8765)
+        <span id="chk-proxy-label">Use local proxy (port 8765)</span>
       </label>
     </div>
   </aside>
 
   <main id="main-area">
-    <div class="empty">Bienvenue — lancez une recherche pour afficher les compétitions.</div>
+    <div class="empty" id="welcome-empty">Welcome — start a search to display competitions.</div>
   </main>
 </div>
 
@@ -461,9 +712,237 @@
   <div class="cmp-selector slot-b" id="cmp-panel-b"></div>
 </div>
 
+<!-- ── Toast container ── -->
+<div class="toast-container" id="toast-container"></div>
 
 <script>
 "use strict";
+
+// ── i18n : EN par défaut, FR optionnel ──────────────────────────────────
+const I18N = {
+  en: {
+    // Header
+    title_results: "World Rowing — Results",
+    title_schedule: "World Rowing — Schedule",
+    subtitle: "Local interface · Official World Rowing API",
+    nav_results: "Results", nav_schedule: "Schedule",
+    hdr_notifs: "Notifs", hdr_compare: "Compare",
+    tt_home: "Home", tt_notifs: "Race notifications",
+    tt_compare: "Compare two competitions",
+    tt_theme: "Light / dark mode", tt_more: "More options",
+    tt_lang: "Language", tt_refresh: "Last auto-refresh (30s)",
+    // More menu
+    menu_notifs: "Notifications", menu_compare: "Compare",
+    menu_no_fav: "No favorite nation",
+    menu_fav: "★ Favorite nation: {nation}",
+    menu_refresh_active: "🔄 Auto-refresh active (30s)",
+    menu_refresh_last: "🔄 Last update: {when}",
+    refresh_label: "Auto-refresh: 30s",
+    // Sidebar
+    lbl_year: "Year", lbl_category: "Category", btn_search: "Search",
+    sidebar_help: "Pick a year and category, then click Search.",
+    sidebar_proxy_help: "The API is public (CORS open). If errors occur, run the proxy:",
+    chk_proxy: "Use local proxy (port 8765)",
+    // States
+    welcome: "Welcome — start a search to display competitions.",
+    no_comps: "No competition found for this selection.",
+    searching: "Searching competitions…",
+    loading: "Loading…", loading_races: "Loading races…",
+    loading_entries: "Loading entries…", loading_results: "Loading results…",
+    no_official: "No official race found.",
+    no_entries: "No entries available for this competition.",
+    no_race_filter: "No race for this selection.",
+    no_result: "No result.", no_crew: "No crew.",
+    no_split: "No split.", no_split_data: "No split data available.",
+    err_label: "Error",
+    err_help: "Enable \"Use local proxy\" and run",
+    // Comp list
+    comps_count: "{n} competition(s)",
+    comps_label: "Competitions · {year} · {cat}",
+    breadcrumb_comps: "Competitions",
+    // Tabs
+    tab_races: "Races", tab_entries: "Entries",
+    tab_results: "Results", tab_crews: "Crews", tab_splits: "Splits",
+    races_count: "Official races ({n})",
+    // Filters
+    all: "All",
+    filter_nation_btn: "🏴 Filter by nation",
+    filter_nation_btn_active: "🏴 Filter by nation · {nation}",
+    filter_load_first: "First load the {link} to filter by nation.",
+    search_nation: "Search a nation…",
+    fav_label: "Favorite:", recents_label: "Recent:",
+    fav_remove: "Remove from favorites", fav_add: "Set as favorite",
+    // Race detail
+    boats_count: "{n} boats",
+    scroll_hint: "← scroll horizontally →",
+    pace_legend: "cumulative · split · gap",
+    // Tables
+    hdr_rank: "Rank", hdr_lane: "Lane", hdr_team: "Team",
+    hdr_time: "Time", hdr_disq: "Invalid mark",
+    hdr_event: "Event", hdr_class: "Class",
+    hdr_country: "Country", hdr_athletes: "Athletes",
+    hdr_final_rank: "Final rank", no_boat: "No boat",
+    entries_count: "{ev} event(s) · {bo} boat(s) entered",
+    // Compare
+    cmp_a: "Competition A", cmp_b: "Competition B",
+    cmp_no_pick: "Pick two competitions to start comparing.",
+    cmp_waiting: "Waiting for competition {slot}…",
+    cmp_no_comp: "No competition.",
+    cmp_loaded: "✓ {n} event(s) loaded",
+    cmp_filter_class: "Filter by class", cmp_filter_nation: "Filter by nation",
+    cmp_tab_events: "By event", cmp_tab_nations: "By nation", cmp_tab_multi: "By boat",
+    cmp_legend_added: "+ added in B",
+    cmp_legend_removed: "− removed from A",
+    cmp_legend_same: "= unchanged",
+    cmp_no_change: "No change",
+    cmp_no_data: "No data for this selection.",
+    cmp_no_dups: "No nation has multiple crews in the same class for this selection.",
+    cmp_total_persons: "Total people", cmp_total_sub: "= unchanged + added",
+    cmp_total: "Total", cmp_total_short: "= unch.+add.",
+    cmp_removed: "Removed", cmp_unchanged: "Unchanged",
+    cmp_added: "Added", cmp_delta: "Δ Net",
+    cmp_no_nation: "No nation found.",
+    cmp_dup_meta: "{n} crews · ★ common",
+    cmp_dups_count: "{n} duplicate(s)",
+    // Time relative
+    ago_sec: "{n}s ago", ago_min: "{n} min ago", ago_hour: "{n}h ago",
+    // Notifications
+    notif_title: "🚣 {nation} — race in 5 min",
+    notif_no_browser: "Your browser doesn't support notifications.",
+  },
+  fr: {
+    title_results: "World Rowing — Résultats",
+    title_schedule: "World Rowing — Programme",
+    subtitle: "Interface locale · API officielle World Rowing",
+    nav_results: "Résultats", nav_schedule: "Programme",
+    hdr_notifs: "Notifs", hdr_compare: "Comparer",
+    tt_home: "Accueil", tt_notifs: "Notifications de courses",
+    tt_compare: "Comparer deux compétitions",
+    tt_theme: "Mode clair / sombre", tt_more: "Plus d'options",
+    tt_lang: "Langue", tt_refresh: "Dernière mise à jour automatique (30s)",
+    menu_notifs: "Notifications", menu_compare: "Comparer",
+    menu_no_fav: "Aucune nation favorite",
+    menu_fav: "★ Nation favorite : {nation}",
+    menu_refresh_active: "🔄 Auto-refresh actif (30s)",
+    menu_refresh_last: "🔄 Dernière màj : {when}",
+    refresh_label: "Auto-refresh : 30s",
+    lbl_year: "Année", lbl_category: "Catégorie", btn_search: "Rechercher",
+    sidebar_help: "Sélectionnez une année et une catégorie puis cliquez sur Rechercher.",
+    sidebar_proxy_help: "L'API est publique (CORS ouvert). Si des erreurs surviennent, lancez le proxy :",
+    chk_proxy: "Utiliser proxy local (port 8765)",
+    welcome: "Bienvenue — lancez une recherche pour afficher les compétitions.",
+    no_comps: "Aucune compétition trouvée pour cette sélection.",
+    searching: "Recherche des compétitions…",
+    loading: "Chargement…", loading_races: "Chargement des courses…",
+    loading_entries: "Chargement des engagés…", loading_results: "Chargement des résultats…",
+    no_official: "Aucune course officielle trouvée.",
+    no_entries: "Aucun engagé disponible pour cette compétition.",
+    no_race_filter: "Aucune course pour cette sélection.",
+    no_result: "Aucun résultat.", no_crew: "Aucun équipage.",
+    no_split: "Aucun intermédiaire.", no_split_data: "Aucune donnée d'intermédiaires disponible.",
+    err_label: "Erreur",
+    err_help: "Activez « Utiliser proxy local » et lancez",
+    comps_count: "{n} compétition(s)",
+    comps_label: "Compétitions · {year} · {cat}",
+    breadcrumb_comps: "Compétitions",
+    tab_races: "Courses", tab_entries: "Engagés",
+    tab_results: "Résultats", tab_crews: "Équipages", tab_splits: "Intermédiaires",
+    races_count: "Courses officielles ({n})",
+    all: "Toutes",
+    filter_nation_btn: "🏴 Filtrer par nation",
+    filter_nation_btn_active: "🏴 Filtrer par nation · {nation}",
+    filter_load_first: "Chargez d'abord les {link} pour filtrer par nation.",
+    search_nation: "Rechercher une nation…",
+    fav_label: "Favori :", recents_label: "Récents :",
+    fav_remove: "Retirer des favoris", fav_add: "Définir comme favori",
+    boats_count: "{n} bateaux",
+    scroll_hint: "← défiler horizontalement →",
+    pace_legend: "cumulé · split · écart",
+    hdr_rank: "Rang", hdr_lane: "Couloir", hdr_team: "Équipe",
+    hdr_time: "Temps", hdr_disq: "Invalidation",
+    hdr_event: "Épreuve", hdr_class: "Classe",
+    hdr_country: "Pays", hdr_athletes: "Athlètes",
+    hdr_final_rank: "Rang final", no_boat: "Aucun bateau",
+    entries_count: "{ev} épreuve(s) · {bo} bateau(x) engagé(s)",
+    cmp_a: "Compétition A", cmp_b: "Compétition B",
+    cmp_no_pick: "Sélectionnez deux compétitions pour lancer la comparaison.",
+    cmp_waiting: "En attente de la compétition {slot}…",
+    cmp_no_comp: "Aucune compétition.",
+    cmp_loaded: "✓ {n} épreuve(s) chargée(s)",
+    cmp_filter_class: "Filtre par classe", cmp_filter_nation: "Filtre par nation",
+    cmp_tab_events: "Par épreuve", cmp_tab_nations: "Par nation", cmp_tab_multi: "Par bateau",
+    cmp_legend_added: "+ ajouté dans B",
+    cmp_legend_removed: "− retiré depuis A",
+    cmp_legend_same: "= inchangé",
+    cmp_no_change: "Aucun changement",
+    cmp_no_data: "Aucune donnée pour cette sélection.",
+    cmp_no_dups: "Aucune nation n'a plusieurs équipages dans une même classe pour cette sélection.",
+    cmp_total_persons: "Total personnes", cmp_total_sub: "= inchangées + ajoutées",
+    cmp_total: "Total", cmp_total_short: "= inch.+aj.",
+    cmp_removed: "Retirée(s)", cmp_unchanged: "Inchangée(s)",
+    cmp_added: "Ajoutée(s)", cmp_delta: "Δ Net",
+    cmp_no_nation: "Aucune nation trouvée.",
+    cmp_dup_meta: "{n} équipages · ★ communs",
+    cmp_dups_count: "{n} doublon(s)",
+    ago_sec: "il y a {n} s", ago_min: "il y a {n} min", ago_hour: "il y a {n} h",
+    notif_title: "🚣 {nation} — course dans 5 min",
+    notif_no_browser: "Votre navigateur ne supporte pas les notifications.",
+  },
+};
+const getLang = () => localStorage.getItem("wr-lang") || "en";
+function t(key, params) {
+  const dict = I18N[getLang()] || I18N.en;
+  let s = dict[key] ?? I18N.en[key] ?? key;
+  if (params) for (const [k, v] of Object.entries(params)) {
+    s = s.split("{" + k + "}").join(String(v));
+  }
+  return s;
+}
+function setLang(lang) {
+  localStorage.setItem("wr-lang", lang);
+  applyStaticI18n();
+  render();
+  if (C.mode) renderCompare();
+  renderMoreMenu();
+  updateRefreshStatus();
+  document.getElementById("lang-icon").textContent = lang.toUpperCase();
+}
+function toggleLang() { setLang(getLang() === "en" ? "fr" : "en"); }
+
+// Applique les chaînes statiques (header, sidebar, document.title)
+function applyStaticI18n() {
+  const lang = getLang();
+  document.documentElement.lang = lang;
+  document.title = t("title_results");
+  // Header
+  const setText = (id, key) => { const el = document.getElementById(id); if (el) el.textContent = t(key); };
+  const setAttr = (id, attr, key) => { const el = document.getElementById(id); if (el) el.setAttribute(attr, t(key)); };
+  setText("brand-h1", "title_results");
+  setText("brand-p",  "subtitle");
+  setText("nav-results-label",  "nav_results");
+  setText("nav-schedule-label", "nav_schedule");
+  setText("btn-notifs-label",   "hdr_notifs");
+  setText("btn-compare-label",  "hdr_compare");
+  setAttr("brand-link", "title", "tt_home");
+  setAttr("nav-results-link",  "title", "nav_results");
+  setAttr("nav-schedule-link", "title", "nav_schedule");
+  setAttr("btn-notif",   "title", "tt_notifs");
+  setAttr("btn-compare", "title", "tt_compare");
+  setAttr("btn-theme",   "title", "tt_theme");
+  setAttr("btn-more",    "title", "tt_more");
+  setAttr("btn-lang",    "title", "tt_lang");
+  setAttr("refresh-status", "title", "tt_refresh");
+  // Menu
+  setText("menu-notif-label",   "menu_notifs");
+  setText("menu-compare-label", "menu_compare");
+  // Sidebar
+  setText("lbl-year", "lbl_year");
+  setText("lbl-category", "lbl_category");
+  setText("btn-search", "btn_search");
+  setText("sidebar-help",       "sidebar_help");
+  setText("sidebar-proxy-help", "sidebar_proxy_help");
+  setText("chk-proxy-label",    "chk_proxy");
+}
 
 const DIRECT_BASE = "https://world-rowing-api.soticcloud.net/stats/api";
 const PROXY_BASE  = "http://127.0.0.1:8765/stats/api";
@@ -557,6 +1036,18 @@ async function apiRaceDetail(raceId) {
   return apiFetch(url);
 }
 
+// Toutes les courses (sans filtre status) avec DateString — pour notifs
+async function apiAllRaces(competitionId) {
+  const url = buildUrl("/race/", {
+    "filter[event.competitionId]": competitionId,
+    "include": "raceStatus,racePhase,event.boatClass,raceBoats",
+    "sort[DateString]": "asc",
+    "paginate": "200",
+  });
+  const payload = await apiFetch(url);
+  return Array.isArray(payload.data) ? payload.data : [];
+}
+
 // ── Compare state ─────────────────────────────────────────────────────────
 const CMP_CATS = [
   "World Rowing Championships","World Rowing Under 19 Championships",
@@ -576,6 +1067,229 @@ let C = {
   classFilter: null,
   nationFilter: null,
 };
+
+// ── Auto-refresh state ────────────────────────────────────────────────────
+let R = {
+  on: true,             // toujours actif (V2 : pas de toggle)
+  intervalId: null,
+  lastRefreshAt: null,
+};
+
+// ── Notifications state ───────────────────────────────────────────────────
+let N = {
+  on: false,
+  intervalId: null,
+  shownToday: new Set(),
+  allRaces: null,        // cache de toutes les courses (incl. futures) pour notifs
+};
+
+// ── Fmt : "il y a Xs / X min" ─────────────────────────────────────────────
+function fmtRelative(ts) {
+  if (!ts) return "—";
+  const sec = Math.max(0, Math.floor((Date.now() - ts) / 1000));
+  if (sec < 60)   return t("ago_sec",  { n: sec });
+  if (sec < 3600) return t("ago_min",  { n: Math.floor(sec/60) });
+  return            t("ago_hour", { n: Math.floor(sec/3600) });
+}
+
+// ── Notifications toggle ──────────────────────────────────────────────────
+function toggleNotifications() {
+  if (!N.on) {
+    if (!("Notification" in window)) {
+      alert(t("notif_no_browser"));
+      return;
+    }
+    if (Notification.permission === "default") {
+      Notification.requestPermission().then(p => {
+        if (p === "granted" || p === "denied") {
+          N.on = true;
+          localStorage.setItem("wr-notif-enabled", "on");
+          document.getElementById("btn-notif").classList.toggle("on", true);
+          startNotificationLoop();
+        }
+      });
+      return;
+    }
+    N.on = true;
+    localStorage.setItem("wr-notif-enabled", "on");
+    document.getElementById("btn-notif").classList.toggle("on", true);
+    startNotificationLoop();
+  } else {
+    N.on = false;
+    localStorage.setItem("wr-notif-enabled", "off");
+    document.getElementById("btn-notif").classList.toggle("on", false);
+    stopNotificationLoop();
+  }
+}
+
+// Stubs (vraies implémentations plus bas)
+// ── Auto-refresh : implémentation (toujours actif, pas de pause hidden) ──
+async function refreshAll() {
+  if (!S.selectedComp) {
+    R.lastRefreshAt = Date.now();
+    updateRefreshStatus();
+    return;
+  }
+  const cId = S.selectedComp.id;
+  try {
+    // Liste des courses (silencieux, sans spinner)
+    const races = await apiRaces(cId);
+    if (S.selectedComp?.id === cId) S.races = races;
+
+    // Engagés si chargés ou onglet visible
+    if (S.compTab === "entries" || S.entries.length) {
+      const entries = await apiEntries(cId);
+      if (S.selectedComp?.id === cId) S.entries = entries;
+    }
+
+    // Détails des courses ouvertes (accordion)
+    for (const rid of [...S.openRaces.keys()]) {
+      try {
+        const detail = await apiRaceDetail(rid);
+        if (S.openRaces.has(rid)) S.openRaces.get(rid).detail = detail;
+      } catch(e) { /* on ignore l'erreur sur une course isolée */ }
+    }
+
+    R.lastRefreshAt = Date.now();
+    render();
+    updateRefreshStatus();
+    if (document.getElementById("more-menu")?.classList.contains("open")) renderMoreMenu();
+  } catch(e) {
+    console.warn("[auto-refresh]", e);
+  }
+}
+
+function startAutoRefresh() {
+  if (R.intervalId) clearInterval(R.intervalId);
+  R.intervalId = setInterval(refreshAll, 30000);
+  // Premier refresh immédiat (utile si on vient juste d'activer)
+  refreshAll();
+}
+function stopAutoRefresh() {
+  if (R.intervalId) { clearInterval(R.intervalId); R.intervalId = null; }
+}
+
+// Met à jour le label "il y a Xs" toutes les 5s
+setInterval(updateRefreshStatus, 5000);
+
+// ── Notifications : implémentation ───────────────────────────────────────
+function getNotifShownKey() {
+  return `wr-notif-shown-${new Date().toISOString().slice(0,10)}`;
+}
+function loadShownToday() {
+  try { return new Set(JSON.parse(localStorage.getItem(getNotifShownKey()) || "[]")); }
+  catch { return new Set(); }
+}
+function saveShownToday(set) {
+  localStorage.setItem(getNotifShownKey(), JSON.stringify([...set]));
+}
+
+// Affiche un toast in-app (auto-dismiss après 8s)
+function showToast(title, text) {
+  const container = document.getElementById("toast-container");
+  if (!container) return;
+  const el = document.createElement("div");
+  el.className = "toast";
+  el.innerHTML = `
+    <span class="toast-icon">🔔</span>
+    <div class="toast-body">
+      <div class="toast-title"></div>
+      <div class="toast-text"></div>
+    </div>
+    <button class="toast-close" aria-label="Fermer">✕</button>`;
+  el.querySelector(".toast-title").textContent = title;
+  el.querySelector(".toast-text").textContent  = text;
+  el.querySelector(".toast-close").addEventListener("click", () => removeToast(el));
+  container.appendChild(el);
+  setTimeout(() => removeToast(el), 8000);
+}
+function removeToast(el) {
+  if (!el || !el.isConnected) return;
+  el.classList.add("fade-out");
+  setTimeout(() => el.remove(), 300);
+}
+
+// Notification système (si permission)
+function sendBrowserNotif(title, body) {
+  if (!("Notification" in window)) return;
+  if (Notification.permission !== "granted") return;
+  try { new Notification(title, { body, tag: title.slice(0,20) }); }
+  catch(e) { /* ignore */ }
+}
+
+// Vérifie s'il y a des courses à venir dans 5 min pour la nation favorite
+async function checkUpcomingRaces() {
+  if (!N.on) return;
+  const fav = getFavNation();
+  if (!fav) return;
+  if (!S.selectedComp) return;
+
+  // Charger les courses (toutes, pas seulement officielles)
+  let races = N.allRaces || [];
+  if (!races.length) {
+    try { races = await apiAllRaces(S.selectedComp.id); N.allRaces = races; }
+    catch(e) { console.warn("[notif]", e); return; }
+  }
+  if (!races.length) return;
+
+  // Résoudre nom complet → code pays via les engagés (si chargés)
+  let code = fav;
+  if (S.entries && S.entries.length) {
+    const resolved = nationCodeFromEntries(fav);
+    if (resolved) code = resolved;
+  }
+
+  N.shownToday = loadShownToday();
+  const now = Date.now();
+  for (const race of races) {
+    const rid = String(race.id);
+    if (N.shownToday.has(rid)) continue;
+    if (!race.DateString) continue;
+    const t = new Date(race.DateString).getTime();
+    if (isNaN(t)) continue;
+    const sec = (t - now) / 1000;
+    if (sec <= 0 || sec > 300) continue; // hors fenêtre 0-5 min
+
+    const inRace = (race.raceBoats || []).some(b => b.DisplayName === code);
+    if (!inRace) continue;
+
+    notifyRace(race, fav);
+    N.shownToday.add(rid);
+  }
+  saveShownToday(N.shownToday);
+}
+
+function notifyRace(race, nation) {
+  const className = race.event?.boatClass?.DisplayName || "";
+  const phase     = race.racePhase?.DisplayName || "";
+  const locale    = getLang() === "fr" ? "fr-FR" : "en-GB";
+  const time      = (() => {
+    try { return new Date(race.DateString).toLocaleTimeString(locale, {hour:"2-digit",minute:"2-digit"}); }
+    catch { return ""; }
+  })();
+  const title = t("notif_title", { nation });
+  const body  = [race.DisplayName, className, phase, time].filter(Boolean).join(" · ");
+  showToast(title, body);
+  sendBrowserNotif(title, body);
+}
+
+function startNotificationLoop() {
+  if (N.intervalId) clearInterval(N.intervalId);
+  N.shownToday = loadShownToday();
+  N.allRaces   = null; // force re-fetch au premier check
+  // Premier check rapide, puis toutes les 30s
+  setTimeout(checkUpcomingRaces, 1500);
+  N.intervalId = setInterval(checkUpcomingRaces, 30000);
+}
+function stopNotificationLoop() {
+  if (N.intervalId) { clearInterval(N.intervalId); N.intervalId = null; }
+}
+
+function updateRefreshStatus() {
+  const lbl = document.getElementById("refresh-label");
+  if (!R.lastRefreshAt) { lbl.textContent = "—"; return; }
+  lbl.textContent = fmtRelative(R.lastRefreshAt);
+}
 
 // ── Compare: toggle ───────────────────────────────────────────────────────
 function toggleCompare() {
@@ -608,21 +1322,21 @@ function renderCmpSelector(slot) {
   const aClr = slot === "a" ? "active-a" : "active-b";
 
   let html = `
-    <div><span class="cmp-label ${cls}">Compétition ${lbl}</span></div>
+    <div><span class="cmp-label ${cls}">${slot === "a" ? t("cmp_a") : t("cmp_b")}</span></div>
     <div class="filter-group">
-      <label>Année</label>
+      <label>${t("lbl_year")}</label>
       <select id="cmp-${slot}-year">${cmpYearOptions(st.year)}</select>
     </div>
     <div class="filter-group">
-      <label>Catégorie</label>
+      <label>${t("lbl_category")}</label>
       <select id="cmp-${slot}-cat">${cmpCatOptions(st.category)}</select>
     </div>
-    <button class="btn" onclick="cmpSearch('${slot}')">Rechercher</button>`;
+    <button class="btn" onclick="cmpSearch('${slot}')">${t("btn_search")}</button>`;
 
   if (st.loading) {
     html += `<div class="loading" style="padding:20px 0;"><div class="spinner"></div></div>`;
   } else if (st.searched && !st.competitions.length) {
-    html += `<div class="empty" style="padding:12px 0; font-size:0.8rem;">Aucune compétition.</div>`;
+    html += `<div class="empty" style="padding:12px 0; font-size:0.8rem;">${t("cmp_no_comp")}</div>`;
   } else {
     for (const c of st.competitions) {
       const name  = c.DisplayName || c.CompetitionCode || c.id;
@@ -635,10 +1349,10 @@ function renderCmpSelector(slot) {
         </div>`;
     }
     if (st.loadingEntries) {
-      html += `<div class="loading" style="padding:12px 0;"><div class="spinner"></div><span style="font-size:0.8rem;">Engagés…</span></div>`;
+      html += `<div class="loading" style="padding:12px 0;"><div class="spinner"></div><span style="font-size:0.8rem;">${t("loading_entries")}</span></div>`;
     } else if (st.selected && st.entries.length) {
       html += `<div style="font-size:0.75rem;color:var(--green);padding:4px 0;">
-        ✓ ${st.entries.length} épreuve(s) chargée(s)</div>`;
+        ${t("cmp_loaded", { n: st.entries.length })}</div>`;
     }
   }
   document.getElementById(`cmp-panel-${slot}`).innerHTML = html;
@@ -651,8 +1365,8 @@ function renderCmpDiff() {
 
   if (!aOk || !bOk) {
     const msg = !aOk && !bOk
-      ? "Sélectionnez deux compétitions pour lancer la comparaison."
-      : `En attente de la compétition ${!aOk ? "A" : "B"}…`;
+      ? t("cmp_no_pick")
+      : t("cmp_waiting", { slot: !aOk ? "A" : "B" });
     el.innerHTML = `<div class="empty" style="padding:60px 20px;">${msg}</div>`;
     return;
   }
@@ -664,9 +1378,9 @@ function renderCmpDiff() {
   // Class filter pills
   const classFilter = diff.classes.length > 1 ? `
     <div>
-      <div class="section-title" style="margin-bottom:6px;">Filtre par classe</div>
+      <div class="section-title" style="margin-bottom:6px;">${t("cmp_filter_class")}</div>
       <div class="class-filters">
-        <div class="pill ${!C.classFilter?"active":""}" onclick="setCmpClassFilter(null)">Toutes</div>
+        <div class="pill ${!C.classFilter?"active":""}" onclick="setCmpClassFilter(null)">${t("all")}</div>
         ${diff.classes.map(c => `<div class="pill ${C.classFilter===c?"active":""}" onclick="setCmpClassFilter('${esc(c)}')">${esc(c)}</div>`).join("")}
       </div>
     </div>` : "";
@@ -677,9 +1391,9 @@ function renderCmpDiff() {
   )].sort();
   const nationFilter = nations.length > 1 ? `
     <div>
-      <div class="section-title" style="margin-bottom:6px;">Filtre par nation</div>
+      <div class="section-title" style="margin-bottom:6px;">${t("cmp_filter_nation")}</div>
       <div class="class-filters">
-        <div class="pill ${!C.nationFilter?"active":""}" onclick="setCmpNationFilter(null)">Toutes</div>
+        <div class="pill ${!C.nationFilter?"active":""}" onclick="setCmpNationFilter(null)">${t("all")}</div>
         ${nations.map(n => `<div class="pill ${C.nationFilter===n?"active":""}" onclick="setCmpNationFilter('${esc(n)}')">${esc(n)}</div>`).join("")}
       </div>
     </div>` : "";
@@ -689,22 +1403,26 @@ function renderCmpDiff() {
       <span class="cmp-label cmp-label-a">${esc(nA)}</span>
       <span style="color:var(--text-muted);">vs</span>
       <span class="cmp-label cmp-label-b">${esc(nB)}</span>
-      <span style="margin-left:8px;" class="diff-ath added">+ ajouté dans B</span>
-      <span class="diff-ath removed">− retiré depuis A</span>
-      <span class="diff-ath same">= inchangé</span>
+      <span style="margin-left:8px;" class="diff-ath added">${t("cmp_legend_added")}</span>
+      <span class="diff-ath removed">${t("cmp_legend_removed")}</span>
+      <span class="diff-ath same">${t("cmp_legend_same")}</span>
     </div>`;
 
   const tabs = `
     <div class="tabs">
-      <div class="tab ${C.diffTab==="events"?"active":""}"  onclick="setCmpDiffTab('events')">Par épreuve</div>
-      <div class="tab ${C.diffTab==="nations"?"active":""}" onclick="setCmpDiffTab('nations')">Par nation</div>
+      <div class="tab ${C.diffTab==="events"?"active":""}"  onclick="setCmpDiffTab('events')">${t("cmp_tab_events")}</div>
+      <div class="tab ${C.diffTab==="nations"?"active":""}" onclick="setCmpDiffTab('nations')">${t("cmp_tab_nations")}</div>
+      <div class="tab ${C.diffTab==="multi"?"active":""}"   onclick="setCmpDiffTab('multi')">${t("cmp_tab_multi")}</div>
     </div>`;
 
-  const content = C.diffTab === "events"
-    ? diffEventsHtml(diff)
-    : diffNationsHtml();   // person-level, cross-boat
+  const content = C.diffTab === "events"  ? diffEventsHtml(diff)
+                : C.diffTab === "multi"   ? diffMultiHtml()
+                :                           diffNationsHtml();
 
-  el.innerHTML = legend + tabs + classFilter + nationFilter + content;
+  // La légende (added / removed / same) ne s'applique pas à l'onglet multi
+  const legendBlock = C.diffTab === "multi" ? "" : legend;
+
+  el.innerHTML = legendBlock + tabs + classFilter + nationFilter + content;
 }
 
 function renderCompare() {
@@ -715,7 +1433,7 @@ function renderCompare() {
 
 // ── Compare: diff computation ─────────────────────────────────────────────
 function flattenEntries(events) {
-  // Map<className → Map<countryName → Map<personId → name>>>
+  // Map<className → Map<countryName → Map<personId → {name, position}>>>
   const result = new Map();
   for (const evt of (events || [])) {
     const cls = evt.boatClass?.DisplayName || "Autre";
@@ -728,7 +1446,8 @@ function flattenEntries(events) {
       for (const ba of (boat.boatAthletes || [])) {
         const p = ba.person || {};
         const name = [p.FirstName, p.LastName].filter(Boolean).join(" ") || p.DisplayName || "?";
-        athletes.set(String(ba.personId), name);
+        const position = ba.boatPosition != null ? String(ba.boatPosition) : "";
+        athletes.set(String(ba.personId), { name, position });
       }
     }
   }
@@ -739,8 +1458,14 @@ function buildDiff(entriesA, entriesB) {
   const mapA = flattenEntries(entriesA);
   const mapB = flattenEntries(entriesB);
   const classSet = new Set([...mapA.keys(), ...mapB.keys()]);
-  const classes  = [...classSet].sort();
+  const classes  = sortClasses([...classSet]);
   const byClass  = {};
+
+  // Trier les athlètes par poste : C, S, [N décroissants], B
+  const sortByPos = (a, b) => {
+    const ra = positionRank(a.position), rb = positionRank(b.position);
+    return ra - rb || (a.name || "").localeCompare(b.name || "");
+  };
 
   for (const cls of classes) {
     const cA = mapA.get(cls) || new Map();
@@ -749,16 +1474,22 @@ function buildDiff(entriesA, entriesB) {
     const byCountry = {};
 
     for (const country of countries) {
-      const athA = cA.get(country) || new Map();  // personId → name
+      const athA = cA.get(country) || new Map();  // personId → {name, position}
       const athB = cB.get(country) || new Map();
       const added = [], removed = [], same = [];
 
-      for (const [id, name] of athB)
-        if (!athA.has(id)) added.push({ id, name });
-        else same.push({ id, name });
+      for (const [id, info] of athB) {
+        const prev = athA.get(id);
+        if (!prev) added.push({ id, ...info });
+        else       same.push({ id, ...info, prevPosition: prev.position });
+      }
 
-      for (const [id, name] of athA)
-        if (!athB.has(id)) removed.push({ id, name });
+      for (const [id, info] of athA)
+        if (!athB.has(id)) removed.push({ id, ...info });
+
+      added.sort(sortByPos);
+      removed.sort(sortByPos);
+      same.sort(sortByPos);
 
       byCountry[country] = { added, removed, same };
     }
@@ -768,6 +1499,16 @@ function buildDiff(entriesA, entriesB) {
 }
 
 // ── Compare: diff renderers ───────────────────────────────────────────────
+// Affiche "Nom (poste)" si le poste est connu. Pour un athlète "same" qui a
+// changé de poste entre A et B, affiche "Nom (oldPos→newPos)".
+function athleteLabel(a, kind) {
+  const pos = a.position ? esc(a.position) : "";
+  if (kind === "same" && a.prevPosition && a.prevPosition !== a.position) {
+    return `${esc(a.name)} <small style="opacity:.75;">(${esc(a.prevPosition)}→${pos || "?"})</small>`;
+  }
+  return pos ? `${esc(a.name)} <small style="opacity:.75;">(${pos})</small>` : esc(a.name);
+}
+
 function diffEventsHtml(diff) {
   const classes = C.classFilter ? [C.classFilter] : diff.classes;
   let html = "";
@@ -788,7 +1529,7 @@ function diffEventsHtml(diff) {
     const badge = (totalAdded || totalRemoved)
       ? `<span class="diff-ath added" style="margin-left:auto;">+${totalAdded}</span>
          <span class="diff-ath removed">−${totalRemoved}</span>`
-      : `<span style="color:var(--green);font-size:0.75rem;margin-left:auto;">Aucun changement</span>`;
+      : `<span style="color:var(--green);font-size:0.75rem;margin-left:auto;">${t("cmp_no_change")}</span>`;
 
     html += `<div class="diff-class-block">
       <div class="diff-class-header">${esc(cls)} ${badge}</div>`;
@@ -797,9 +1538,9 @@ function diffEventsHtml(diff) {
       if (C.nationFilter && country !== C.nationFilter) continue;
       const { added, removed, same } = group.byCountry[country];
       const allAthletes = [
-        ...removed.map(a => `<span class="diff-ath removed">− ${esc(a.name)}</span>`),
-        ...same.map(a    => `<span class="diff-ath same">= ${esc(a.name)}</span>`),
-        ...added.map(a   => `<span class="diff-ath added">+ ${esc(a.name)}</span>`),
+        ...removed.map(a => `<span class="diff-ath removed">− ${athleteLabel(a, "removed")}</span>`),
+        ...same.map(a    => `<span class="diff-ath same">= ${athleteLabel(a, "same")}</span>`),
+        ...added.map(a   => `<span class="diff-ath added">+ ${athleteLabel(a, "added")}</span>`),
       ].join("");
 
       html += `<div class="diff-country-row">
@@ -810,7 +1551,7 @@ function diffEventsHtml(diff) {
     html += `</div>`;
   }
 
-  return html || `<div class="empty">Aucune donnée pour cette sélection.</div>`;
+  return html || `<div class="empty">${t("cmp_no_data")}</div>`;
 }
 
 // buildNationDiff — compare les PERSONNES par nation, tous bateaux confondus.
@@ -874,25 +1615,25 @@ function diffNationsHtml() {
       <!-- Bloc total -->
       <div style="padding:12px 18px;border-right:1px solid var(--border);
                   display:flex;flex-direction:column;justify-content:center;gap:2px;">
-        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);">Total personnes</div>
+        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);">${t("cmp_total_persons")}</div>
         <div style="font-size:1.5rem;font-weight:700;color:var(--text);line-height:1;">${totalB}</div>
-        <div style="font-size:0.72rem;color:var(--text-muted);">= inchangées + ajoutées</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);">${t("cmp_total_sub")}</div>
       </div>
       <!-- Détail -->
       <div style="padding:12px 18px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
         <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
           <span style="font-size:1.2rem;font-weight:700;" class="nation-delta-neg">−${nd.totalRemoved}</span>
-          <span style="font-size:0.72rem;color:var(--text-muted);">Retirée(s)</span>
+          <span style="font-size:0.72rem;color:var(--text-muted);">${t("cmp_removed")}</span>
         </div>
         <div style="width:1px;height:32px;background:var(--border);"></div>
         <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
           <span style="font-size:1.2rem;font-weight:700;color:var(--text-muted);">${nd.totalSame}</span>
-          <span style="font-size:0.72rem;color:var(--text-muted);">Inchangée(s)</span>
+          <span style="font-size:0.72rem;color:var(--text-muted);">${t("cmp_unchanged")}</span>
         </div>
         <div style="width:1px;height:32px;background:var(--border);"></div>
         <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
           <span style="font-size:1.2rem;font-weight:700;" class="nation-delta-pos">+${nd.totalAdded}</span>
-          <span style="font-size:0.72rem;color:var(--text-muted);">Ajoutée(s)</span>
+          <span style="font-size:0.72rem;color:var(--text-muted);">${t("cmp_added")}</span>
         </div>
       </div>
     </div>`;
@@ -909,7 +1650,7 @@ function diffNationsHtml() {
     return db !== da ? db - da : a.localeCompare(b);
   });
 
-  if (!sorted.length) return summary + `<div class="empty">Aucune nation trouvée.</div>`;
+  if (!sorted.length) return summary + `<div class="empty">${t("cmp_no_nation")}</div>`;
 
   let cards = "";
   for (const country of sorted) {
@@ -933,24 +1674,24 @@ function diffNationsHtml() {
           <div class="nation-card-stats">
             <div class="nation-stat total">
               <div class="nation-stat-val">${totalN}</div>
-              <div class="nation-stat-lbl">Total</div>
-              <div class="nation-stat-sub">= inch.+aj.</div>
+              <div class="nation-stat-lbl">${t("cmp_total")}</div>
+              <div class="nation-stat-sub">${t("cmp_total_short")}</div>
             </div>
             <div class="nation-stat removed">
               <div class="nation-stat-val">−${st.removed.length}</div>
-              <div class="nation-stat-lbl">Retirée(s)</div>
+              <div class="nation-stat-lbl">${t("cmp_removed")}</div>
             </div>
             <div class="nation-stat same">
               <div class="nation-stat-val">${st.same.length}</div>
-              <div class="nation-stat-lbl">Inchangée(s)</div>
+              <div class="nation-stat-lbl">${t("cmp_unchanged")}</div>
             </div>
             <div class="nation-stat added">
               <div class="nation-stat-val">+${st.added.length}</div>
-              <div class="nation-stat-lbl">Ajoutée(s)</div>
+              <div class="nation-stat-lbl">${t("cmp_added")}</div>
             </div>
             <div class="nation-stat" style="min-width:60px;">
               <div class="nation-stat-val ${dCls}">${dStr}</div>
-              <div class="nation-stat-lbl">Δ Net</div>
+              <div class="nation-stat-lbl">${t("cmp_delta")}</div>
             </div>
           </div>
         </div>
@@ -959,6 +1700,109 @@ function diffNationsHtml() {
   }
 
   return summary + `<div style="display:flex;flex-direction:column;gap:8px;">${cards}</div>`;
+}
+
+// ── Compare: doublons (>= 2 bateaux pour une nation dans la même classe) ─
+function findDuplicateBoats(events) {
+  const byClass = new Map();
+  for (const evt of (events || [])) {
+    const cls = evt.boatClass?.DisplayName || "Autre";
+    if (!byClass.has(cls)) byClass.set(cls, new Map());
+    const byCountry = byClass.get(cls);
+    for (const boat of (evt.boats || [])) {
+      const country = boat.country?.DisplayName || boat.DisplayName || "—";
+      if (!byCountry.has(country)) byCountry.set(country, []);
+      byCountry.get(country).push(boat);
+    }
+  }
+  const result = [];
+  for (const [cls, byCountry] of byClass) {
+    for (const [country, boats] of byCountry) {
+      if (boats.length >= 2) result.push({ cls, country, boats });
+    }
+  }
+  result.sort((a, b) => {
+    const ka = boatClassSortKey(a.cls), kb = boatClassSortKey(b.cls);
+    return ka[0]-kb[0] || ka[1]-kb[1] || ka[2].localeCompare(kb[2])
+        || a.country.localeCompare(b.country);
+  });
+  return result;
+}
+
+function renderDupBlock(dup) {
+  // Marquer les athlètes communs entre tous les bateaux (par personId)
+  const sets = dup.boats.map(boat =>
+    new Set((boat.boatAthletes || []).map(ba => String(ba.personId)))
+  );
+  const commonSet = sets.length
+    ? new Set([...sets[0]].filter(id => sets.every(s => s.has(id))))
+    : new Set();
+
+  const cols = dup.boats.map(boat => {
+    const athletes = sortAthletes(boat.boatAthletes || [], a => a.boatPosition);
+    const lines = athletes.map(a => {
+      const p = a.person || {};
+      const name = [p.FirstName, p.LastName].filter(Boolean).join(" ") || p.DisplayName || "?";
+      const pos  = a.boatPosition || "";
+      const isCommon = commonSet.has(String(a.personId));
+      return `<div class="dup-ath ${isCommon?"common":""}">
+        ${pos ? `<span class="dup-pos">${esc(pos)}</span>` : `<span class="dup-pos">·</span>`}
+        <span>${esc(name)}</span>
+      </div>`;
+    }).join("");
+    return `<div class="dup-col">
+      <div class="dup-col-title">${esc(boat.DisplayName || "—")}</div>
+      ${lines || `<span style="color:var(--text-muted);font-size:0.75rem;">—</span>`}
+    </div>`;
+  }).join("");
+
+  return `<div style="padding:10px 14px;border-bottom:1px solid var(--border);">
+    <div class="dup-block-title" style="background:transparent;border:none;padding:0 0 8px 0;">
+      <span class="name">${esc(dup.country)}</span>
+      <span class="badge badge-muted">${esc(dup.cls)}</span>
+      <span class="meta">${t("cmp_dup_meta", { n: dup.boats.length })}</span>
+    </div>
+    <div class="dup-grid">${cols}</div>
+  </div>`;
+}
+
+function diffMultiHtml() {
+  // Filtres class/nation actuels appliqués à la liste de doublons
+  const filterDups = (arr) => arr.filter(d =>
+    (!C.classFilter  || d.cls     === C.classFilter) &&
+    (!C.nationFilter || d.country === C.nationFilter)
+  );
+  const aDups = filterDups(findDuplicateBoats(C.a.entries));
+  const bDups = filterDups(findDuplicateBoats(C.b.entries));
+
+  if (!aDups.length && !bDups.length) {
+    return `<div class="empty">${t("cmp_no_dups")}</div>`;
+  }
+
+  let html = "";
+  if (aDups.length) {
+    const nA = C.a.selected?.DisplayName || t("cmp_a");
+    html += `<div class="diff-class-block">
+      <div class="diff-class-header">
+        <span class="cmp-label cmp-label-a">A</span>
+        <span style="color:var(--text);font-transform:none;text-transform:none;">${esc(nA)}</span>
+        <span style="margin-left:auto;color:var(--text-muted);">${t("cmp_dups_count", { n: aDups.length })}</span>
+      </div>
+      ${aDups.map(renderDupBlock).join("")}
+    </div>`;
+  }
+  if (bDups.length) {
+    const nB = C.b.selected?.DisplayName || t("cmp_b");
+    html += `<div class="diff-class-block" style="margin-top:14px;">
+      <div class="diff-class-header">
+        <span class="cmp-label cmp-label-b">B</span>
+        <span style="color:var(--text);text-transform:none;">${esc(nB)}</span>
+        <span style="margin-left:auto;color:var(--text-muted);">${t("cmp_dups_count", { n: bDups.length })}</span>
+      </div>
+      ${bDups.map(renderDupBlock).join("")}
+    </div>`;
+  }
+  return html;
 }
 
 // ── Compare: actions ──────────────────────────────────────────────────────
@@ -997,8 +1841,9 @@ function fmtTime(t) {
 function fmtDate(d) {
   if (!d) return "—";
   try {
+    const locale = getLang() === "fr" ? "fr-FR" : "en-GB";
     return new Date(String(d).replace(" ", "T"))
-      .toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" });
+      .toLocaleDateString(locale, { day: "2-digit", month: "short", year: "numeric" });
   } catch { return d; }
 }
 function fmtDist(raw) {
@@ -1012,23 +1857,57 @@ function esc(s) {
 function rankClass(r) { return r==1?"rank-1":r==2?"rank-2":r==3?"rank-3":""; }
 function rankEmoji(r) { return r==1?"🥇":r==2?"🥈":r==3?"🥉":(r||"—"); }
 
+// ── Tri des classes de bateau : Open → Light → Para → Mix, M → W → Mix ──
+function boatClassSortKey(name) {
+  const s = String(name || "").trim();
+  let cat = 3, gender = 2;
+  if (/^PR\d?\s*M/i.test(s))      { cat = 2; gender = 0; }
+  else if (/^PR\d?\s*W/i.test(s)) { cat = 2; gender = 1; }
+  else if (/^PR/i.test(s))        { cat = 2; gender = 2; }
+  else if (/^LM/i.test(s))        { cat = 1; gender = 0; }
+  else if (/^LW/i.test(s))        { cat = 1; gender = 1; }
+  else if (/^M(?!ix)/i.test(s))   { cat = 0; gender = 0; }
+  else if (/^W/i.test(s))         { cat = 0; gender = 1; }
+  else if (/^Mix/i.test(s))       { cat = 0; gender = 2; }
+  return [cat, gender, s];
+}
+function sortClasses(arr) {
+  return [...arr].sort((a, b) => {
+    const ka = boatClassSortKey(a), kb = boatClassSortKey(b);
+    return ka[0] - kb[0] || ka[1] - kb[1] || ka[2].localeCompare(kb[2]);
+  });
+}
+
+// ── Tri des athlètes par poste : C, S, [N décroissants], B ──────────────
+function positionRank(pos) {
+  const p = String(pos ?? "").trim().toUpperCase();
+  if (p === "C" || p.startsWith("COX")) return -1;
+  if (p === "S" || p.startsWith("STR")) return 0;
+  if (p === "B" || p.startsWith("BOW")) return 999;
+  const n = parseInt(p, 10);
+  if (!isNaN(n)) return 100 - n;     // 7 → 93, 2 → 98 (décroissant après S)
+  return 500;                         // poste inconnu : avant Bow
+}
+function sortAthletes(arr, getPos) {
+  const fn = getPos || (a => a.position ?? a.boatPosition);
+  return [...arr].sort((a, b) => positionRank(fn(a)) - positionRank(fn(b)));
+}
+
 // ── Main area render ──────────────────────────────────────────────────────
 function render() {
   const el = document.getElementById("main-area");
 
   if (S.error) {
-    el.innerHTML = `<div class="error-box"><strong>Erreur</strong> — ${esc(S.error)}<br/><br/>
-      Activez "Utiliser proxy local" et lancez <code>python proxy.py</code>.</div>`;
+    el.innerHTML = `<div class="error-box"><strong>${t("err_label")}</strong> — ${esc(S.error)}<br/><br/>
+      ${t("err_help")} <code>python proxy.py</code>.</div>`;
     return;
   }
   if (S.loadingComps) {
-    el.innerHTML = `<div class="loading"><div class="spinner"></div>Recherche des compétitions…</div>`;
+    el.innerHTML = `<div class="loading"><div class="spinner"></div>${t("searching")}</div>`;
     return;
   }
   if (!S.competitions.length) {
-    el.innerHTML = `<div class="empty">${S.searched
-      ? "Aucune compétition trouvée pour cette sélection."
-      : "Bienvenue — lancez une recherche pour afficher les compétitions."}</div>`;
+    el.innerHTML = `<div class="empty">${S.searched ? t("no_comps") : t("welcome")}</div>`;
     return;
   }
 
@@ -1042,8 +1921,8 @@ function renderCompList() {
   const cat  = document.getElementById("sel-category").value;
   let html = `
     <div>
-      <div class="section-title">Compétitions · ${year} · ${esc(cat)}</div>
-      <div style="font-size:0.78rem;color:var(--text-muted);margin-top:2px;">${S.competitions.length} compétition(s)</div>
+      <div class="section-title">${t("comps_label", { year, cat: esc(cat) })}</div>
+      <div style="font-size:0.78rem;color:var(--text-muted);margin-top:2px;">${t("comps_count", { n: S.competitions.length })}</div>
     </div>
     <div class="cards-grid">`;
   for (const c of S.competitions) {
@@ -1070,13 +1949,13 @@ function renderRaceSection() {
   let html = `
     <hr/>
     <div class="breadcrumb">
-      <a onclick="clearAll()">Compétitions</a>
+      <a onclick="clearAll()">${t("breadcrumb_comps")}</a>
       <span class="sep">›</span>
       <span>${compName}</span>
     </div>
     <div class="tabs">
-      <div class="tab ${S.compTab==="races"?"active":""}"   onclick="setCompTab('races')">Courses</div>
-      <div class="tab ${S.compTab==="entries"?"active":""}" onclick="setCompTab('entries')">Engagés</div>
+      <div class="tab ${S.compTab==="races"?"active":""}"   onclick="setCompTab('races')">${t("tab_races")}</div>
+      <div class="tab ${S.compTab==="entries"?"active":""}" onclick="setCompTab('entries')">${t("tab_entries")}</div>
     </div>`;
 
   if (S.compTab === "races")   html += renderRaceList();
@@ -1097,19 +1976,19 @@ function nationCodeFromEntries(fullName) {
 
 function renderRaceList() {
   if (S.loadingRaces) {
-    return `<div class="loading"><div class="spinner"></div>Chargement des courses…</div>`;
+    return `<div class="loading"><div class="spinner"></div>${t("loading_races")}</div>`;
   }
   if (!S.races.length) {
-    return `<div class="empty">Aucune course officielle trouvée.</div>`;
+    return `<div class="empty">${t("no_official")}</div>`;
   }
 
-  const classes = [...new Set(S.races.map(r => r.event?.boatClass?.DisplayName || "Autre"))];
+  const classes = sortClasses([...new Set(S.races.map(r => r.event?.boatClass?.DisplayName || "Autre"))]);
   let html = `<div>
-    <div class="section-title" style="margin-bottom:0;">Courses officielles (${S.races.length})</div>`;
+    <div class="section-title" style="margin-bottom:0;">${t("races_count", { n: S.races.length })}</div>`;
 
   if (classes.length > 1) {
     html += `<div class="class-filters">
-      <div class="pill ${!S.classFilter?"active":""}" onclick="setClassFilter(null)">Toutes</div>
+      <div class="pill ${!S.classFilter?"active":""}" onclick="setClassFilter(null)">${t("all")}</div>
       ${classes.map(c => `<div class="pill ${S.classFilter===c?"active":""}" onclick="setClassFilter('${esc(c)}')">${esc(c)}</div>`).join("")}
     </div>`;
   }
@@ -1118,10 +1997,9 @@ function renderRaceList() {
   const hasEntries = S.entries.length > 0;
   let nationPanelBody = "";
   if (!hasEntries) {
+    const linkHtml = `<a style="color:var(--accent);cursor:pointer;" onclick="setCompTab('entries')">${t("tab_entries")}</a>`;
     nationPanelBody = `<div style="font-size:0.78rem;color:var(--text-muted);line-height:1.55;">
-      Chargez d'abord les
-      <a style="color:var(--accent);cursor:pointer;" onclick="setCompTab('entries')">Engagés</a>
-      pour filtrer par nation.
+      ${t("filter_load_first", { link: linkHtml })}
     </div>`;
   } else {
     // Collect all nations from entries
@@ -1134,18 +2012,48 @@ function renderRaceList() {
     })();
     const q = S.raceNationSearch.toLowerCase();
     const filtered = q ? allNations.filter(n => n.toLowerCase().includes(q)) : allNations;
-    const activeLabel = S.raceNationFilter ? ` · <em style="color:var(--accent);font-style:normal;">${esc(S.raceNationFilter)}</em>` : "";
+
+    const fav     = getFavNation();
+    const recents = getRecentNations().filter(n => n !== fav).slice(0, 4);
+
+    const favSection = (fav || recents.length) ? `
+      <div class="fav-section">
+        ${fav ? `
+          <div class="fav-current">
+            <span class="star">★</span>
+            <span style="color:var(--text-muted);">${t("fav_label")}</span>
+            <span class="nation-name" onclick="setRaceNation('${esc(fav)}')">${esc(fav)}</span>
+            <span class="fav-clear" title="${t("fav_remove")}" onclick="toggleFavNation('${esc(fav)}')">✕</span>
+          </div>` : ''}
+        ${recents.length ? `
+          <div class="fav-recents">
+            <span>🕐 ${t("recents_label")}</span>
+            ${recents.map(n => `<span class="recent-chip" onclick="setRaceNation('${esc(n)}')">${esc(n)}</span>`).join("")}
+          </div>` : ''}
+      </div>` : '';
+
     nationPanelBody = `
-      <input class="nation-search" type="text" placeholder="Rechercher une nation…"
+      <input class="nation-search" type="text" placeholder="${t("search_nation")}"
              value="${esc(S.raceNationSearch)}"
              oninput="setRaceNationSearch(this.value)"/>
-      <div class="class-filters" style="padding:0;max-height:170px;overflow-y:auto;gap:5px;">
-        <div class="pill ${!S.raceNationFilter?"active":""}" onclick="setRaceNation(null)">Toutes</div>
-        ${filtered.map(n => `<div class="pill ${S.raceNationFilter===n?"active":""}" onclick="setRaceNation('${esc(n)}')">${esc(n)}</div>`).join("")}
+      ${favSection}
+      <div class="class-filters" style="padding:0;max-height:200px;overflow-y:auto;gap:5px;">
+        <div class="pill ${!S.raceNationFilter?"active":""}" onclick="setRaceNation(null)">${t("all")}</div>
+        ${filtered.map(n => {
+          const isFav    = fav === n;
+          const isActive = S.raceNationFilter === n;
+          return `<div class="pill nation-pill ${isActive?"active":""}" onclick="setRaceNation('${esc(n)}')">
+            <span class="fav-star ${isFav?"is-fav":""}" title="${isFav?t("fav_remove"):t("fav_add")}"
+                  onclick="event.stopPropagation();toggleFavNation('${esc(n)}')">${isFav?"★":"☆"}</span>
+            <span>${esc(n)}</span>
+          </div>`;
+        }).join("")}
       </div>`;
   }
 
-  const toggleLabel = `🏴 Filtrer par nation${S.raceNationFilter && hasEntries ? " · " + esc(S.raceNationFilter) : ""}`;
+  const toggleLabel = S.raceNationFilter && hasEntries
+    ? t("filter_nation_btn_active", { nation: esc(S.raceNationFilter) })
+    : t("filter_nation_btn");
   html += `
   <div class="collapsible-panel">
     <button class="collapsible-toggle ${S.raceNationPanelOpen?"open":""}" onclick="toggleRaceNationPanel()">
@@ -1179,9 +2087,11 @@ function renderRaceList() {
 
   html += `<div class="race-list" style="margin-top:10px;">`;
   if (!Object.keys(groups).length) {
-    html += `<div class="empty" style="padding:24px;">Aucune course pour cette sélection.</div>`;
+    html += `<div class="empty" style="padding:24px;">${t("no_race_filter")}</div>`;
   } else {
-    for (const [cls, races] of Object.entries(groups)) {
+    const sortedGroupKeys = sortClasses(Object.keys(groups));
+    for (const cls of sortedGroupKeys) {
+      const races = groups[cls];
       if (!S.classFilter) html += `<div class="group-label">${esc(cls)}</div>`;
       for (const r of races) {
         const phase  = (typeof r.racePhase === "object" ? r.racePhase?.DisplayName : r.racePhase) || "—";
@@ -1207,20 +2117,20 @@ function renderRaceDetailInline(id) {
   const st = S.openRaces.get(id);
   if (!st) return "";
   if (st.loading) {
-    return `<div class="loading" style="padding:32px 0;"><div class="spinner"></div>Chargement des résultats…</div>`;
+    return `<div class="loading" style="padding:32px 0;"><div class="spinner"></div>${t("loading_results")}</div>`;
   }
   const race  = st.detail?.data || {};
   const boats = race.raceBoats || [];
 
   const sub = `<div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:10px;">
-    ${esc(fmtDate(race.Date))} · ${boats.length} bateaux
+    ${esc(fmtDate(race.Date))} · ${t("boats_count", { n: boats.length })}
   </div>`;
 
   const sid = esc(id);
   const tabs = `<div class="tabs" style="margin-bottom:12px;">
-    <div class="tab ${st.tab==="results"?"active":""}"   onclick="setRaceTab('${sid}','results')">Résultats</div>
-    <div class="tab ${st.tab==="athletes"?"active":""}"  onclick="setRaceTab('${sid}','athletes')">Équipages</div>
-    <div class="tab ${st.tab==="pace"?"active":""}"      onclick="setRaceTab('${sid}','pace')">Intermédiaires</div>
+    <div class="tab ${st.tab==="results"?"active":""}"   onclick="setRaceTab('${sid}','results')">${t("tab_results")}</div>
+    <div class="tab ${st.tab==="athletes"?"active":""}"  onclick="setRaceTab('${sid}','athletes')">${t("tab_crews")}</div>
+    <div class="tab ${st.tab==="pace"?"active":""}"      onclick="setRaceTab('${sid}','pace')">${t("tab_splits")}</div>
   </div>`;
 
   const content = st.tab === "results"  ? tabResults(boats)
@@ -1232,40 +2142,45 @@ function renderRaceDetailInline(id) {
 
 function renderEntriesList() {
   if (S.loadingEntries) {
-    return `<div class="loading"><div class="spinner"></div>Chargement des engagés…</div>`;
+    return `<div class="loading"><div class="spinner"></div>${t("loading_entries")}</div>`;
   }
   if (!S.entries.length) {
-    return `<div class="empty">Aucun engagé disponible pour cette compétition.</div>`;
+    return `<div class="empty">${t("no_entries")}</div>`;
   }
 
   // distinct boat classes
-  const classes = [...new Set(S.entries.map(e => e.boatClass?.DisplayName || "Autre"))];
+  const classes = sortClasses([...new Set(S.entries.map(e => e.boatClass?.DisplayName || "Autre"))]);
 
-  // filter
-  const filtered = S.entryClassFilter
+  // filter + sort entries by class order (so the table groups events properly)
+  const filtered = (S.entryClassFilter
     ? S.entries.filter(e => (e.boatClass?.DisplayName || "Autre") === S.entryClassFilter)
-    : S.entries;
+    : [...S.entries]
+  ).sort((a, b) => {
+    const ka = boatClassSortKey(a.boatClass?.DisplayName || "Autre");
+    const kb = boatClassSortKey(b.boatClass?.DisplayName || "Autre");
+    return ka[0]-kb[0] || ka[1]-kb[1] || ka[2].localeCompare(kb[2]);
+  });
 
   // total boats
   const totalBoats = filtered.reduce((sum, e) => sum + (e.boats?.length || 0), 0);
 
   let html = `<div>
-    <div class="section-title" style="margin-bottom:0;">${filtered.length} épreuve(s) · ${totalBoats} bateau(x) engagé(s)</div>`;
+    <div class="section-title" style="margin-bottom:0;">${t("entries_count", { ev: filtered.length, bo: totalBoats })}</div>`;
 
   if (classes.length > 1) {
     html += `<div class="class-filters">
-      <div class="pill ${!S.entryClassFilter?"active":""}" onclick="setEntryClassFilter(null)">Toutes</div>
+      <div class="pill ${!S.entryClassFilter?"active":""}" onclick="setEntryClassFilter(null)">${t("all")}</div>
       ${classes.map(c => `<div class="pill ${S.entryClassFilter===c?"active":""}" onclick="setEntryClassFilter('${esc(c)}')">${esc(c)}</div>`).join("")}
     </div>`;
   }
 
   html += `<div class="table-wrap" style="margin-top:10px;"><table>
     <thead><tr>
-      <th>Épreuve</th>
-      <th>Classe</th>
-      <th>Pays</th>
-      <th>Athlètes</th>
-      <th>Rang final</th>
+      <th>${t("hdr_event")}</th>
+      <th>${t("hdr_class")}</th>
+      <th>${t("hdr_country")}</th>
+      <th>${t("hdr_athletes")}</th>
+      <th>${t("hdr_final_rank")}</th>
     </tr></thead>
     <tbody>`;
 
@@ -1278,7 +2193,7 @@ function renderEntriesList() {
       html += `<tr>
         <td><strong>${esc(evtName)}</strong></td>
         <td><span class="badge badge-muted">${esc(cls)}</span></td>
-        <td colspan="3" style="color:var(--text-muted)">Aucun bateau</td>
+        <td colspan="3" style="color:var(--text-muted)">${t("no_boat")}</td>
       </tr>`;
       continue;
     }
@@ -1294,10 +2209,11 @@ function renderEntriesList() {
       const b       = sorted[i];
       const country = b.country?.DisplayName || b.DisplayName || "—";
       const flag    = b.DisplayName || "—";  // country code
-      const ath     = b.boatAthletes || [];
+      const ath     = sortAthletes(b.boatAthletes || [], a => a.boatPosition);
       const names   = ath.map(a => {
         const p = a.person || {};
-        return [p.FirstName, p.LastName].filter(Boolean).join(" ") || p.DisplayName || "—";
+        const nm = [p.FirstName, p.LastName].filter(Boolean).join(" ") || p.DisplayName || "—";
+        return a.boatPosition ? `${a.boatPosition}· ${nm}` : nm;
       }).join(", ");
       const rank = b.finalRank || "—";
 
@@ -1315,10 +2231,10 @@ function renderEntriesList() {
 
 // ── Tab content ───────────────────────────────────────────────────────────
 function tabResults(boats) {
-  if (!boats.length) return `<div class="empty">Aucun résultat.</div>`;
+  if (!boats.length) return `<div class="empty">${t("no_result")}</div>`;
   const sorted = [...boats].sort((a,b) => (a.Rank||99)-(b.Rank||99));
   let html = `<div class="table-wrap"><table>
-    <thead><tr><th>Rang</th><th>Couloir</th><th>Équipe</th><th>Temps</th><th>Invalidation</th></tr></thead><tbody>`;
+    <thead><tr><th>${t("hdr_rank")}</th><th>${t("hdr_lane")}</th><th>${t("hdr_team")}</th><th>${t("hdr_time")}</th><th>${t("hdr_disq")}</th></tr></thead><tbody>`;
   for (const b of sorted) {
     const mark = b.invalidMarkResultCode;
     const markName = mark ? (typeof mark==="object" ? mark.DisplayName : mark) : null;
@@ -1334,12 +2250,12 @@ function tabResults(boats) {
 }
 
 function tabAthletes(boats) {
-  if (!boats.length) return `<div class="empty">Aucun équipage.</div>`;
+  if (!boats.length) return `<div class="empty">${t("no_crew")}</div>`;
   const sorted = [...boats].sort((a,b) => (a.Rank||99)-(b.Rank||99));
   let html = `<div class="table-wrap"><table>
-    <thead><tr><th>Rang</th><th>Équipe</th><th>Athlètes</th></tr></thead><tbody>`;
+    <thead><tr><th>${t("hdr_rank")}</th><th>${t("hdr_team")}</th><th>${t("hdr_athletes")}</th></tr></thead><tbody>`;
   for (const b of sorted) {
-    const athletes = b.raceBoatAthletes || [];
+    const athletes = sortAthletes(b.raceBoatAthletes || [], a => a.boatPosition);
     const chips = athletes.length
       ? athletes.map(a => {
           const p = a.person || {};
@@ -1376,7 +2292,7 @@ function secToSplit(sec) {
 }
 
 function tabPace(boats) {
-  if (!boats.length) return `<div class="empty">Aucun intermédiaire.</div>`;
+  if (!boats.length) return `<div class="empty">${t("no_split")}</div>`;
   const sorted = [...boats].sort((a,b) => (a.Rank||99)-(b.Rank||99));
 
   // ── Construire la liste des distances triées ───────────────────────────
@@ -1386,7 +2302,7 @@ function tabPace(boats) {
       if (i.distance?.DisplayName && !distMap.has(i.distance.DisplayName))
         distMap.set(i.distance.DisplayName, fmtDist(i.distance.DisplayName));
 
-  if (!distMap.size) return `<div class="empty">Aucune donnée d'intermédiaires disponible.</div>`;
+  if (!distMap.size) return `<div class="empty">${t("no_split_data")}</div>`;
 
   const dists = [...distMap.keys()].sort((a,b) =>
     parseInt(a.replace(/\D/g,""),10) - parseInt(b.replace(/\D/g,""),10));
@@ -1446,17 +2362,17 @@ function tabPace(boats) {
   const tdBase = `style="font-variant-numeric:tabular-nums;font-family:monospace;
                          vertical-align:top;padding:8px 13px;"`;
 
-  let html = `<div class="scroll-hint">← défiler horizontalement →</div>
+  let html = `<div class="scroll-hint">${t("scroll_hint")}</div>
   <div class="table-wrap"><table>
     <thead>
       <tr>
-        <th rowspan="2">Rang</th>
-        <th rowspan="2">Équipe</th>
+        <th rowspan="2">${t("hdr_rank")}</th>
+        <th rowspan="2">${t("hdr_team")}</th>
         ${dists.map(d => `<th colspan="1" style="text-align:center;">${esc(distMap.get(d))}</th>`).join("")}
       </tr>
       <tr>
         ${dists.map(() => `<th style="font-size:0.66rem;color:var(--text-muted);font-weight:500;border-top:1px solid var(--border);">
-          <span style="opacity:.7;">cumulé · </span>split · écart
+          ${t("pace_legend")}
         </th>`).join("")}
       </tr>
     </thead>
@@ -1509,6 +2425,29 @@ function tabPace(boats) {
   return html + `</tbody></table></div>`;
 }
 
+// ── Persistence : compétition sélectionnée (partagée index ↔ schedule) ──
+function saveSelectedComp(comp, year, category) {
+  if (!comp) { localStorage.removeItem("wr-selected-comp"); return; }
+  try {
+    localStorage.setItem("wr-selected-comp", JSON.stringify({
+      id: comp.id, year: String(year), category: String(category),
+    }));
+  } catch {}
+}
+function loadSelectedComp() {
+  try {
+    const raw = localStorage.getItem("wr-selected-comp");
+    return raw ? JSON.parse(raw) : null;
+  } catch { return null; }
+}
+// Compétition en cours aujourd'hui ?
+function isOngoingComp(c) {
+  const today = new Date().toISOString().slice(0,10);
+  const start = String(c.StartDate || "").slice(0,10);
+  const end   = String(c.EndDate   || "").slice(0,10);
+  return start && end && start <= today && today <= end;
+}
+
 // ── Actions ───────────────────────────────────────────────────────────────
 async function search() {
   const year = document.getElementById("sel-year").value;
@@ -1528,6 +2467,19 @@ async function search() {
     S.competitions = await apiCompetitions(year, cat);
   } catch(e) { S.error = e.message; }
   finally { S.loadingComps = false; btn.disabled = false; render(); }
+
+  // Auto-sélection : 1) comp sauvegardée si toujours présente, sinon
+  //                  2) comp en cours aujourd'hui, sinon
+  //                  3) la plus récente (sort desc → index 0)
+  if (!S.error && S.competitions.length) {
+    const saved = loadSelectedComp();
+    let target = null;
+    if (saved && saved.year === String(year) && saved.category === cat) {
+      target = S.competitions.find(c => c.id === saved.id) || null;
+    }
+    if (!target) target = S.competitions.find(isOngoingComp) || S.competitions[0];
+    if (target) selectComp(target.id);
+  }
 }
 
 async function selectComp(id) {
@@ -1540,6 +2492,10 @@ async function selectComp(id) {
     raceNationPanelOpen: false, raceNationFilter: null, raceNationSearch: "",
     openRaces: new Map(),
   });
+  N.allRaces = null;  // invalide le cache notifs (changement de comp)
+  saveSelectedComp(comp,
+    document.getElementById("sel-year").value,
+    document.getElementById("sel-category").value);
   render();
   try { S.races = await apiRaces(id); }
   catch(e) { console.error(e); }
@@ -1619,17 +2575,21 @@ function toggleRaceNationPanel() {
 }
 function setRaceNation(n) {
   S.raceNationFilter = n;
-  // Mémoriser la sélection
-  if (n) localStorage.setItem("wr-nation-races", n);
-  else   localStorage.removeItem("wr-nation-races");
+  if (n) {
+    localStorage.setItem("wr-nation-races", n);
+    addRecentNation(n);
+  } else {
+    localStorage.removeItem("wr-nation-races");
+  }
   render();
 }
 function setRaceNationSearch(v) { S.raceNationSearch = v; render(); }
 
-// Restaurer la nation sauvegardée une fois les engagés chargés
+// Restaurer la nation sauvegardée (ou favorite) une fois les engagés chargés
 function tryRestoreNation() {
-  const saved = localStorage.getItem("wr-nation-races");
-  if (!saved || !S.entries.length) return;
+  if (!S.entries.length) return;
+  const saved = localStorage.getItem("wr-nation-races") || getFavNation();
+  if (!saved) return;
   const nations = new Set();
   for (const evt of S.entries)
     for (const boat of (evt.boats || []))
@@ -1640,18 +2600,77 @@ function tryRestoreNation() {
   }
 }
 
+// ── Favoris nations (partagés via localStorage) ──────────────────────────
+function getFavNation() { return localStorage.getItem("wr-fav-nation") || null; }
+function setFavNationStored(n) {
+  if (!n) localStorage.removeItem("wr-fav-nation");
+  else    localStorage.setItem("wr-fav-nation", n);
+}
+function getRecentNations() {
+  try { return JSON.parse(localStorage.getItem("wr-fav-recents") || "[]"); }
+  catch { return []; }
+}
+function addRecentNation(n) {
+  if (!n) return;
+  const list = getRecentNations().filter(x => x !== n);
+  list.unshift(n);
+  localStorage.setItem("wr-fav-recents", JSON.stringify(list.slice(0, 5)));
+}
+// Toggle : devient favorite si elle ne l'est pas, sinon retire
+function toggleFavNation(n) {
+  const cur = getFavNation();
+  setFavNationStored(cur === n ? null : n);
+  renderMoreMenu();
+  render();
+}
+
 // ── Theme ─────────────────────────────────────────────────────────────────
 function initTheme() {
-  if (localStorage.getItem("wr-theme") === "light") {
-    document.body.classList.add("light");
-    document.getElementById("btn-theme").textContent = "🌙";
-  }
+  const isLight = localStorage.getItem("wr-theme") === "light";
+  if (isLight) document.body.classList.add("light");
+  document.getElementById("theme-icon").textContent = isLight ? "☀️" : "🌙";
 }
 function toggleTheme() {
   const isLight = document.body.classList.toggle("light");
   localStorage.setItem("wr-theme", isLight ? "light" : "dark");
-  document.getElementById("btn-theme").textContent = isLight ? "🌙" : "☀️";
+  document.getElementById("theme-icon").textContent = isLight ? "☀️" : "🌙";
 }
+
+// ── Header : more menu (mobile) ───────────────────────────────────────────
+function toggleMoreMenu(e) {
+  if (e) e.stopPropagation();
+  const m = document.getElementById("more-menu");
+  const willOpen = !m.classList.contains("open");
+  m.classList.toggle("open", willOpen);
+  if (willOpen) renderMoreMenu();
+}
+function closeMoreMenu() {
+  document.getElementById("more-menu").classList.remove("open");
+}
+function renderMoreMenu() {
+  const notifOn = localStorage.getItem("wr-notif-enabled") === "on";
+  const fav     = localStorage.getItem("wr-fav-nation");
+
+  const elN = document.getElementById("menu-notif");
+  elN.classList.toggle("on", notifOn);
+  document.getElementById("menu-notif-state").textContent = notifOn ? "ON" : "OFF";
+
+  document.getElementById("menu-fav-info").textContent = fav
+    ? t("menu_fav", { nation: fav })
+    : t("menu_no_fav");
+
+  const last = R.lastRefreshAt;
+  document.getElementById("menu-refresh-info").textContent = last
+    ? t("menu_refresh_last", { when: fmtRelative(last) })
+    : t("menu_refresh_active");
+}
+
+document.addEventListener("click", e => {
+  const m = document.getElementById("more-menu");
+  if (!m.classList.contains("open")) return;
+  if (e.target.closest("#more-menu") || e.target.closest("#btn-more")) return;
+  m.classList.remove("open");
+});
 
 // Escape : ferme toutes les courses ouvertes ou quitte le mode comparaison
 document.addEventListener("keydown", e => {
@@ -1662,6 +2681,39 @@ document.addEventListener("keydown", e => {
 
 document.getElementById("btn-search").addEventListener("click", search);
 initTheme();
+applyStaticI18n();
+document.getElementById("lang-icon").textContent = getLang().toUpperCase();
+initHeaderState();
+
+function initHeaderState() {
+  // Auto-refresh toujours actif (V2 : plus de toggle)
+  startAutoRefresh();
+  updateRefreshStatus();
+
+  // Restaurer notifications (sans redemander la permission)
+  if (localStorage.getItem("wr-notif-enabled") === "on"
+      && "Notification" in window
+      && Notification.permission === "granted") {
+    N.on = true;
+    document.getElementById("btn-notif").classList.add("on");
+    startNotificationLoop();
+  }
+}
+
+// Auto-search au chargement : restaure les filtres mémorisés et lance une
+// recherche pour afficher automatiquement la compétition en cours / la plus
+// récente / celle qui était sélectionnée la dernière fois.
+function autoSearchOnLoad() {
+  const saved = loadSelectedComp();
+  if (saved) {
+    const yearSel = document.getElementById("sel-year");
+    const catSel  = document.getElementById("sel-category");
+    if ([...yearSel.options].some(o => o.value === saved.year))    yearSel.value = saved.year;
+    if ([...catSel.options].some(o => o.value === saved.category)) catSel.value = saved.category;
+  }
+  search();
+}
+autoSearchOnLoad();
 </script>
 </body>
 </html>
